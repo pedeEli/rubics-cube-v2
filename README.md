@@ -12,13 +12,13 @@ npm install rubics-cube
 
 then create a rubics cube and start it
 ```typescript
-import RubicsCube from 'rubics-cube'
+import RubicsCube, {defaultTexture, defaultUVs, defaultHoveringColors} from 'rubics-cube'
 
 const rubicsCube = new RubicsCube(
   attributeName,
-  texture,
-  uvs,
-  hoveringColors
+  defaultTexture,
+  defaultUVs,
+  defaultHoveringColors
 )
 rubicsCube.start()
 ```
@@ -32,10 +32,10 @@ Specifies the data attribute on the canvas
 ```
 
 ### `texture`
-Specifies how the cube faces look. Can be used to have pictures instead of plane colors
+Specifies how the cube faces look. Can be used to have pictures instead of plane color
 
 ### `uvs`
-Specifies which face uses which part of the texture
+Specifies which face uses which part of the texture. 
 
 ### `hoveringColors`
 Specifies a red, green and blue channel by which the colors of a face is multiplied when hovering over it
