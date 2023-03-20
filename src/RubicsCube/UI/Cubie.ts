@@ -41,17 +41,20 @@ export class Cubie {
   public transform: Transform<Facelet | InsideFacelet, Rubics>
 
   public constructor(
-    position: V3,
-    rotation: Quaternion,
     public index: number,
-    uvs: number[][],
+    uvs: number[][][],
     hoveringColors: V3[],
     parent: Rubics
   ) {
-    this.transform = new Transform(position, rotation, parent)
+    const x = Math.floor(index / 1) % 3
+    const y = Math.floor(index / 3) % 3
+    const z = Math.floor(index / 9) % 3
+    const position = new V3(x, y, z).sub(V3.one)
+
+    this.transform = new Transform(position, Quaternion.identity, parent)
     for (let side = 0; side < 6; side++) {
       const inside = isInside(side, this.index)
-      const position = positionForSide[side]//getPositionFromSide(side)
+      const position = positionForSide[side]
       const rotation = rotationForSide[side]
 
       if (inside) {
@@ -61,8 +64,11 @@ export class Cubie {
         continue
       }
 
+      const [u, v] = [x, y, z].filter((_, index) => index !== Math.floor(side / 2))
+      const sideIndex = v * 3 + u
+
       const transform = new FaceletTransform(position, rotation, this)
-      const facelet = new Facelet(transform, side, uvs[side], hoveringColors[side])
+      const facelet = new Facelet(transform, side, uvs[side][sideIndex], hoveringColors[side])
       this.transform.children.push(facelet)
       this.facelets.push(facelet)
     }

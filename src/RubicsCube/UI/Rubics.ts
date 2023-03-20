@@ -32,7 +32,7 @@ export class Rubics {
 
   public constructor(
     rotation: Quaternion,
-    uvs: number[][],
+    uvs: number[][][],
     hoveringColors: V3[]
   ) {
     this.transform = new RubicsTransform(V3.zero, rotation)
@@ -40,13 +40,7 @@ export class Rubics {
     this.cubies = []
 
     for (let i = 0; i < 27; i++) {
-      const x = Math.floor(i / 1) % 3
-      const y = Math.floor(i / 3) % 3
-      const z = Math.floor(i / 9) % 3
-      const position = new V3(x, y, z).sub(V3.one)
       const cubie = new Cubie(
-        position,
-        Quaternion.identity,
         i,
         uvs,
         hoveringColors,

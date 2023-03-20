@@ -29,7 +29,7 @@ export class RubicsCube {
   constructor(
     private _canvasData: string,
     private _image: ImageData | HTMLImageElement,
-    private _uvs: number[][],
+    private _uvs: number[][][],
     private _hoveringColors: number[][]
   ) {}
 
