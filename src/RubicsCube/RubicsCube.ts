@@ -16,6 +16,7 @@ export class RubicsCube {
   private _canvas!: HTMLCanvasElement
   private _program!: Program
   private _vao!: WebGLVertexArrayObject
+  private _uvsVbo!: WebGLBuffer
   private _texture!: WebGLTexture
 
   private _camera!: Camera
@@ -63,7 +64,7 @@ export class RubicsCube {
       this._program.uniform('view', this._camera.worldToCameraMatrix)
       this._program.uniform('projection', this._camera.projectionMatrix)
     
-      this._rubics.render(this._program, this._gl)
+      this._rubics.render(this._program, this._gl, this._uvsVbo)
       this._rubics.update(deltaTime)
     
       this._frame = requestAnimationFrame(loop)
@@ -127,7 +128,7 @@ export class RubicsCube {
       0, -.5,  .5
     ]
     const verticesBuffer = new Float32Array(vertices)
-    const vbo = gl.createBuffer()
+    const verticesVbo = gl.createBuffer()
 
     const indices = [
       0, 1, 3,
@@ -136,14 +137,17 @@ export class RubicsCube {
     const indicesBuffer = new Int8Array(indices)
     const ebo = gl.createBuffer()
 
-    if (!vbo || !ebo) {
+    const uvsVbo = gl.createBuffer()
+
+    if (!verticesVbo || !ebo || !uvsVbo) {
       throw new Error('could not create a vertex buffer objects')
     }
+    this._uvsVbo = uvsVbo
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer, gl.STATIC_DRAW)
     
-    gl.bindBuffer(gl.ARRAY_BUFFER, vbo)
+    gl.bindBuffer(gl.ARRAY_BUFFER, verticesVbo)
     gl.bufferData(gl.ARRAY_BUFFER, verticesBuffer, gl.STATIC_DRAW)
     
     gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 12, 0)
@@ -174,7 +178,7 @@ export class RubicsCube {
 
     const hoveringColors = this._hoveringColors.map(([r, g, b]) => new V3(r, g, b))
     this._camera = new Camera(new V3(0, 0, -10), V3.zero, V3.up, 45, window.innerWidth, window.innerHeight, .1, 100)
-    this._rubics = new Rubics(Quaternion.identity, this._uvs, hoveringColors, gl)
+    this._rubics = new Rubics(Quaternion.identity, this._uvs, hoveringColors)
     this._inputHandler = new InputHandler(canvas, this._rubics, this._camera)
   }
 

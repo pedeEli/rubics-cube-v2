@@ -38,14 +38,14 @@ export class Facelet {
     public transform: FaceletTransform,
     public side: number,
     public uvs: number[],
-    private _hoveringMult: V3,
-    private _vbo: WebGLBuffer
+    private _hoveringMult: V3
   ) {}
 
-  public render(program: Program, gl: WebGL2RenderingContext) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo)
+  public render(program: Program, gl: WebGL2RenderingContext, uvsVbo: WebGLBuffer) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, uvsVbo)
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.uvs), gl.STATIC_DRAW)
     gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 8, 0)
+    gl.bindBuffer(gl.ARRAY_BUFFER, null)
 
     program.uniform('model', this.transform.globalTransform)
     program.uniform('colorMult', this.hovering ? this._hoveringMult : V3.one)

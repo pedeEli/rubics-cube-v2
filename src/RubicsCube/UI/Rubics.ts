@@ -33,8 +33,7 @@ export class Rubics {
   public constructor(
     rotation: Quaternion,
     uvs: number[][],
-    hoveringColors: V3[],
-    gl: WebGL2RenderingContext
+    hoveringColors: V3[]
   ) {
     this.transform = new RubicsTransform(V3.zero, rotation)
 
@@ -51,8 +50,7 @@ export class Rubics {
         i,
         uvs,
         hoveringColors,
-        this,
-        gl
+        this
       )
       this.cubies.push(cubie)
       this.transform.children.push(cubie)
@@ -60,8 +58,8 @@ export class Rubics {
   }
 
 
-  public render(program: Program, gl: WebGL2RenderingContext) {
-    this.cubies.forEach(cubie => cubie.render(program, gl))
+  public render(program: Program, gl: WebGL2RenderingContext, uvsVbo: WebGLBuffer) {
+    this.cubies.forEach(cubie => cubie.render(program, gl, uvsVbo))
   }
 
 

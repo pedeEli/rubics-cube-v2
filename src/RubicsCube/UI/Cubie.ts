@@ -61,8 +61,7 @@ export class Cubie {
     public index: number,
     uvs: number[][],
     hoveringColors: V3[],
-    parent: Rubics,
-    gl: WebGL2RenderingContext
+    parent: Rubics
   ) {
     this.transform = new Transform(position, rotation, parent)
     for (let side = 0; side < 6; side++) {
@@ -78,8 +77,7 @@ export class Cubie {
       }
 
       const transform = new FaceletTransform(position, rotation, this)
-      const vbo = gl.createBuffer()!
-      const facelet = new Facelet(transform, side, uvs[side], hoveringColors[side], vbo)
+      const facelet = new Facelet(transform, side, uvs[side], hoveringColors[side])
       this.transform.children.push(facelet)
       this.facelets.push(facelet)
     }
@@ -89,7 +87,7 @@ export class Cubie {
     return this.facelets.find(facelet => facelet.side === side)!
   }
 
-  public render(program: Program, gl: WebGL2RenderingContext) {
-    this.transform.children.forEach(child => child.render.call(child, program, gl))
+  public render(program: Program, gl: WebGL2RenderingContext, uvsVbo: WebGLBuffer) {
+    this.transform.children.forEach(child => child.render.call(child, program, gl, uvsVbo))
   }
 }
