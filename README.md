@@ -58,7 +58,7 @@ Indices have the following order: (brackets use default values)
 ### Facelet
 This is a bit more complicated to explain. The indices follow the same [rule](#indices) as the [sides](#side). For example if you look at the front side without moving the cube index 0 would be the bottom right facelet and index 1 would be 1 to the left. Thats because the indices go first from left to right and the from bottom to top. This means index 0, 1 and 2 are the bottom row, 3, 4 and 5 the row above and so on. And remember always from left to right. In this example we were able to ignore the third [index rule](#indices) because these facelets where pointed at the front so it doesn't make sense to use this rule. Following the same logic we can always ignore on rule when figuring the facelet indices out.
 
-If you want a visual way to see all indices use the following code and copy the `numbers.png` image to your source files
+If you want a visual way to see all indices use the following code and copy the [numbers.png](https://github.com/pedeEli/rubics-cube-v2/blob/main/number.png) image to your source files
 ```typescript
 import RubicsCube, {defaultHovorvingColors} from './RubicsCube'
 
