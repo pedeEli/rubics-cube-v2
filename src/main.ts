@@ -1,5 +1,5 @@
 import './style.css'
-import RubicsCube, {defaultHovovingColors} from './RubicsCube'
+import RubicsCube, {defaultHovorvingColors} from './RubicsCube'
 
 
 const image = new Image()
@@ -28,7 +28,7 @@ image.addEventListener('load', () => {
     'data-rubics-cube',
     image,
     uvs,
-    defaultHovovingColors
+    defaultHovorvingColors
   )
 
   rubicsCube.start()

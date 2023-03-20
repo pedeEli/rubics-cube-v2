@@ -21,4 +21,4 @@ export const defaultUVs = Array(6).fill(null).map((_, index) => {
   ])
 })
 
-export const defaultHovovingColors = Array(6).fill(Array(3).fill(.7))
+export const defaultHovorvingColors = Array(6).fill(Array(3).fill(.7))
