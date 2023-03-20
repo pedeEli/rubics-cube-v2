@@ -7,30 +7,15 @@ import {Transform} from './Transform'
 import {Rubics} from './Rubics'
 import {FaceletTransform, InsideFacelet} from './Facelet'
 
-// const colors = [
-//   new V3(1, 1, 1),
-//   new V3(1, 1, 0),
-//   new V3(1, 0, 0),
-//   new V3(1, .5, 0),
-//   new V3(0, 1, 0),
-//   new V3(0, 0, 1)
-// ]
 
-// const hovovingColors = [
-//   new V3(.7, .7, .7),
-//   new V3(.7, .7, 0),
-//   new V3(.7, 0, 0),
-//   new V3(.7, .3, 0),
-//   new V3(0, .7, 0),
-//   new V3(0, 0, .7)
-// ]
-
-const getPositionFromSide = (side: number): V3 => {
-  const axis = Math.floor(side / 2)
-  const vector = V3.getRotationAxis(axis)
-  const invert = side % 2
-  return vector.scale(.5 - invert)
-}
+const positionForSide = [
+  V3.right,
+  V3.left,
+  V3.down,
+  V3.up,
+  V3.back,
+  V3.forward
+].map(v => v.scale(0.5))
 
 const rotationForSide = [
   Quaternion.fromAngle(V3.right, 180),
@@ -66,7 +51,7 @@ export class Cubie {
     this.transform = new Transform(position, rotation, parent)
     for (let side = 0; side < 6; side++) {
       const inside = isInside(side, this.index)
-      const position = getPositionFromSide(side)
+      const position = positionForSide[side]//getPositionFromSide(side)
       const rotation = rotationForSide[side]
 
       if (inside) {
