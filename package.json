@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "rimraf ./dist && tsc && copyfiles ./package.json ./dist",
-    "publish": "cd ./dist && npm publish"
+    "publish": "cd ./dist && npm publish",
+    "preview": "tsc --project preview.tsconfig.json && vite build --outDir preview"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
