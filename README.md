@@ -63,7 +63,7 @@ If you want a visual way to see all indices use the following code and copy the 
 import RubicsCube, {defaultHovorvingColors} from './RubicsCube'
 
 const image = new Image()
-image.src = 'number.png'
+image.src = 'number.png' // or 'https://raw.githubusercontent.com/pedeEli/rubics-cube-v2/main/number.png'
 
 const uvs = Array(6).fill(null).map((_, side) => {
   const bottom = 0.5 + Math.floor(side / 3) * 0.5

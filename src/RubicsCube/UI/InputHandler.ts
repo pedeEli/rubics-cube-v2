@@ -90,6 +90,9 @@ export class InputHandler {
       const angle = Math.round(info.angle / 90)
       this._rubics.finishRotation(info.axis, info.index, angle)
     }
+    if (action.type === 'none') {
+      this._pointers.clear()
+    }
     this._action = action
   }
 
@@ -153,7 +156,8 @@ export class InputHandler {
   }
   private _pointerLeave = InputHandler._getPointerLeave(this)
   private static _getPointerLeave(inputHandler: InputHandler) {
-    return () => {
+    return (event: PointerEvent) => {
+      inputHandler._pointers.delete(event.pointerId)
       inputHandler._setAction({
         type: 'none'
       })
