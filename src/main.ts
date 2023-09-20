@@ -9,3 +9,8 @@ const rubicsCube = new RubicsCube(
 )
 
 rubicsCube.start()
+
+
+rubicsCube.on('turn', event => {
+  console.log(event)
+})

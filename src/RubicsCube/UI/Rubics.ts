@@ -33,7 +33,8 @@ export class Rubics {
   public constructor(
     rotation: Quaternion,
     uvs: number[][][],
-    hoveringColors: V3[]
+    hoveringColors: V3[],
+    private _turnCallback: (event: {axis: number, angle: number, index: number}) => void
   ) {
     this.transform = new RubicsTransform(V3.zero, rotation)
 
@@ -220,6 +221,7 @@ export class Rubics {
     this._initialAngle = this._currentAngle
     this._rotationIndex = index
     this._rotationAxisIndex = axis
+    this._turnCallback({axis, index, angle})
   }
 
   public update(delta: number) {

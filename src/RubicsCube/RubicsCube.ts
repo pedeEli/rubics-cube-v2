@@ -178,11 +178,28 @@ export class RubicsCube {
 
     const hoveringColors = this._hoveringColors.map(([r, g, b]) => new V3(r, g, b))
     this._camera = new Camera(new V3(0, 0, -10), V3.zero, V3.up, 45, window.innerWidth, window.innerHeight, .1, 100)
-    this._rubics = new Rubics(Quaternion.identity, this._uvs, hoveringColors)
+    this._rubics = new Rubics(Quaternion.identity, this._uvs, hoveringColors, this._turnHandler.bind(this))
     this._inputHandler = new InputHandler(canvas, this._rubics, this._camera)
   }
 
   public get transform() {
     return this._rubics.transform
   }
+
+  private _listeners = new Map<string, Set<(event: any) => void>>()
+  public on<Name extends keyof Events>(name: Name, callback: (event: Events[Name]) => void) {
+    const set = this._listeners.get(name) ?? new Set()
+    set.add(callback)
+    this._listeners.set(name, set)
+  }
+  private _turnHandler(event: Events['turn']) {
+    const set = this._listeners.get('turn')
+    if (set) {
+      set.forEach(callback => callback(event))
+    }
+  }
+}
+
+type Events = {
+  turn: {axis: number, index: number, angle: number}
 }
