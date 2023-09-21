@@ -44,17 +44,12 @@ export class Corners {
     }
   }
 
-  public cornerToPosition(corner: Corner) {
-    return [...corner].reduce((vec, char) => {
-      if (char === 'U') {
-        vec.y = 2
-      } else if (char === 'L') {
-        vec.x = 2
-      } else if (char === 'B') {
-        vec.z = 2
-      }
-      return vec
-    }, new V3(0, 0, 0))
+  public static cornerToPosition(corner: Corner) {
+    return new V3(
+      corner[1] === 'R' ? 0 : 2,
+      corner[0] === 'D' ? 0 : 2,
+      corner[2] === 'F' ? 0 : 2
+    )
   }
 
   public stringify() {

@@ -45,10 +45,11 @@ export class Edges {
   }
 
   public static edgeToPosition(edge: Edge) {
-    return [...edge].reduce((vec, char) => {
-      char = char
-      return vec
-    }, new V3(0, 0, 0))
+    return new V3(
+      edge[1] === 'R' ? 0 : edge[1] === 'L' ? 2 : 1,
+      edge[0] === 'D' ? 0 : edge[0] === 'U' ? 2 : 1,
+      edge[0] === 'F' || edge[1] === 'F' ? 0 : edge[0] === 'B' || edge[0] === 'B' ? 2 : 1
+    )
   }
 
   public stringify() {
