@@ -23,7 +23,7 @@ const orientations: Record<Turn, Orientation[]> = {
 }
 
 export class Corners {
-  public static order: Corner[] = ['URF', 'ULF', 'ULB', 'URB', 'DRF', 'DLF', 'DLB', 'DRB']
+  public static order = ['URF', 'ULF', 'ULB', 'URB', 'DRF', 'DLF', 'DLB', 'DRB'] as const
 
   public permutation = [...Corners.order]
   public orientation = Array<Orientation>(8).fill(0)
@@ -55,5 +55,59 @@ export class Corners {
       }
       return vec
     }, new V3(0, 0, 0))
+  }
+
+  public stringify() {
+    const permutation = this.permutation.join('.')
+    const orientation = this.orientation.join('.')
+    return `${permutation}_${orientation}`
+  }
+
+  public parse(str: string) {
+    const [p, o] = str.split('_')
+    const permutation = Corners._parsePermutation(p)
+    if (permutation === null) {
+      return
+    }
+    const orientation = Corners._parseOrientation(o)
+    if (orientation === null) {
+      return
+    }
+    this.permutation = permutation
+    this.orientation = orientation
+  }
+
+  private static _parsePermutation(str: string): Corner[] | null {
+    const parts = str.split('.')
+    if (parts.length !== 8) {
+      return null
+    }
+    const check = Array(8).fill(false)
+    for (let i = 0; i < 8; i++) {
+      const index = Corners.order.indexOf(parts[i] as Corner)
+      if (index === -1 || check[index]) {
+        return null
+      }
+      check[index] = true
+    }
+    return parts as Corner[]
+  }
+  private static _parseOrientation(str: string): Orientation[] | null {
+    const parts = str.split('.').map(Number)
+    if (parts.length !== 8) {
+      return null
+    }
+    let sum = 0
+    for (let i = 0; i < 8; i++) {
+      const part = parts[i]
+      if (part < 0 || part > 2) {
+        return null
+      }
+      sum += part
+    }
+    if (sum % 3 !== 0) {
+      return null
+    }
+    return parts as Orientation[]
   }
 }
