@@ -4,7 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -14,8 +14,7 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "declaration": true,
-    "inlineSourceMap": true
-  },
-  "include": ["src/RubicsCube"]
+    "checkJs": true,
+    "strictPropertyInitialization": false
+  }
 }
