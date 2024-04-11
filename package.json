@@ -1,3 +1,6 @@
 {
-	"name": "root"
+	"name": "root",
+	"scripts": {
+		"dev": "pnpm --filter www dev"
+	}
 }

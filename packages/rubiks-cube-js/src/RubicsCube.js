@@ -9,6 +9,11 @@ import debug from './UI/Debugger'
 
 import {vertex, fragment} from './Shaders/facelet.glsl'
 
+import {State} from './State'
+
+import {convertEventToTurn} from './Converter'
+
+
 /** @typedef {import('./types').Events} Events */
 
 export class RubicsCube {
@@ -33,6 +38,8 @@ export class RubicsCube {
   #rubics
 	/** @type {InputHandler} */
   #inputHandler
+  /** @type {State} */
+  #state
 
   #frame = 0
   #resizeHandler = RubicsCube.#getResizeHandler(this)
@@ -104,6 +111,24 @@ export class RubicsCube {
     this.#inputHandler.removeEventListeners()
   }
 
+  /**
+   * @param {string} stateStr
+   * @returns {boolean}
+   */
+  setState(stateStr) {
+    if (!this.#initialized) {
+      this.#initialize()
+      this.#initialized = true
+    }
+
+    if (!this.#state.parse(stateStr)) {
+      return false
+    }
+
+    this.#state.applyState(this.#uvs, this.#rubics)
+    return true
+  }
+
 	/**
 	 * @param {RubicsCube} rubicsCube
 		* @returns {() => void}
@@ -152,10 +177,10 @@ export class RubicsCube {
     gl.bindVertexArray(vao)
 
     const vertices = [
-      0,  .5,  .5,
-      0,  .5, -.5,
       0, -.5, -.5,
-      0, -.5,  .5
+      0, -.5,  .5,
+      0,  .5,  .5,
+      0,  .5, -.5
     ]
     const verticesBuffer = new Float32Array(vertices)
     const verticesVbo = gl.createBuffer()
@@ -210,6 +235,7 @@ export class RubicsCube {
     this.#camera = new Camera(new V3(0, 0, -10), V3.zero, V3.up, 45, window.innerWidth, window.innerHeight, .1, 100)
     this.#rubics = new Rubics(Quaternion.identity, this.#uvs, hoveringColors, this.#turnHandler.bind(this))
     this.#inputHandler = new InputHandler(canvas, this.#rubics, this.#camera)
+    this.#state = new State()
   }
 
   get transform() {
@@ -232,9 +258,22 @@ export class RubicsCube {
 	 * @param {Events['turn']} event
 	 */
   #turnHandler(event) {
-    const set = this.#listeners.get('turn')
-    if (set) {
-      set.forEach(callback => callback(event))
+    const turn = convertEventToTurn(event)
+    this.#state.applyTurn(turn)
+    
+    const turnHandlers = this.#listeners.get('turn')
+    if (turnHandlers) {
+      for (const callback of turnHandlers) {
+        callback(event)
+      }
+    }
+
+    const stateHandlers = this.#listeners.get('state')
+    if (stateHandlers) {
+      const state = this.#state.stringify()
+      for (const callback of stateHandlers) {
+        callback(state)
+      }
     }
   }
 }

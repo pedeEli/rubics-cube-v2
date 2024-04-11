@@ -32,7 +32,8 @@ export type Action = {
   mouse: V2,
   right: SideInfo,
   down: SideInfo,
-  side: 'right' | 'down' | null
+  side: 'right' | 'down' | null,
+  facelet: Facelet
 } | {
   type: 'gesture',
   center: V2,
@@ -46,5 +47,6 @@ export interface Uniform {
 
 
 export type Events = {
-  turn: {axis: number, index: number, angle: number}
+  turn: {axis: number, index: number, angle: number},
+  state: string
 }

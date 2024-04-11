@@ -15,12 +15,12 @@ const positionForSide = [
 ].map(v => v.scale(0.5))
 
 const rotationForSide = [
-  Quaternion.fromAngle(V3.right, 180),
-  Quaternion.fromAngle(V3.down.add(V3.back), 180),
-  Quaternion.fromAngle(V3.up, 180).mult(Quaternion.fromAngle(V3.forward, 90)),
-  Quaternion.fromAngle(V3.forward.add(V3.right), 180).mult(Quaternion.fromAngle(V3.forward, 90)),
-  Quaternion.fromAngle(V3.down.add(V3.right), 180).mult(Quaternion.fromAngle(V3.up, 90)),
-  Quaternion.fromAngle(V3.back, 180).mult(Quaternion.fromAngle(V3.up, 90))
+  Quaternion.identity,
+  Quaternion.identity,
+  Quaternion.fromAngle(V3.back, 90),
+  Quaternion.fromAngle(V3.back, 90),
+  Quaternion.fromAngle(V3.back, 90).mult(Quaternion.fromAngle(V3.down, 90)),
+  Quaternion.fromAngle(V3.back, 90).mult(Quaternion.fromAngle(V3.down, 90))
 ]
 
 /**
@@ -28,13 +28,43 @@ const rotationForSide = [
  * @param {number} index
  * @returns {boolean}
  */
-const isInside = (side, index) => {
+export const isInside = (side, index) => {
   const axis = Math.floor(side / 2)
   const invert = side % 2
   const coordinate = Math.floor(index / Math.pow(3, axis)) % 3
   return coordinate === 1
     || coordinate === 0 && invert === 1
     || coordinate === 2 && invert === 0
+}
+
+/**
+ * @param {number} index
+ * @returns {[x: number, y: number, z: number]}
+ */
+export const indexToPosition = index => {
+  const x = Math.floor(index / 1) % 3
+  const y = Math.floor(index / 3) % 3
+  const z = Math.floor(index / 9) % 3
+  return [x, y, z]
+}
+
+/**
+ * @param {[x: number, y: number, z: number]} pos
+ * @param {number} side
+ * @param {number[][][]} uvs
+ * @returns {number[]}
+ */
+export const positionToUvs = (pos, side, uvs) => {
+  const axis = Math.floor(side / 2)
+  /** @type {number[]} */
+  const uvCoords = []
+  for (let i = 0; i < 3; i++) {
+    if (i !== axis) {
+      uvCoords.push(pos[i])
+    }
+  }
+  const sideIndex = uvCoords[0] + uvCoords[1] * 3
+  return uvs[side][sideIndex]
 }
 
 
@@ -52,10 +82,8 @@ export class Cubie {
    */
   constructor(index, uvs, hoveringColors, parent) {
     this.index = index
-    const x = Math.floor(index / 1) % 3
-    const y = Math.floor(index / 3) % 3
-    const z = Math.floor(index / 9) % 3
-    const position = new V3(x, y, z).sub(V3.one)
+    const pos = indexToPosition(index)
+    const position = new V3(pos[0], pos[1], pos[2]).sub(V3.one)
 
     this.transform = new Transform(position, Quaternion.identity, parent)
     for (let side = 0; side < 6; side++) {
@@ -70,11 +98,9 @@ export class Cubie {
         continue
       }
 
-      const [u, v] = [x, y, z].filter((_, index) => index !== Math.floor(side / 2))
-      const sideIndex = v * 3 + u
-
+      const uv = positionToUvs(pos, side, uvs)
       const transform = new FaceletTransform(position, rotation, this)
-      const facelet = new Facelet(transform, side, uvs[side][sideIndex], hoveringColors[side])
+      const facelet = new Facelet(transform, side, uv, hoveringColors[side])
       this.transform.children.push(facelet)
       this.facelets.push(facelet)
     }

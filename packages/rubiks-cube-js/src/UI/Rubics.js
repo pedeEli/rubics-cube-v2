@@ -4,8 +4,80 @@ import {lerp, mod} from '../Math/Utils'
 
 import {Cubie} from './Cubie'
 import {Transform} from './Transform'
+import {uvsTransformerPresets, sidesShiftMapper} from './UVs'
 
-const rotationAxis = ([0, 1, 2]).map(axis => V3.getRotationAxis(axis))
+// magic values
+const rotationAxis = [
+  V3.getRotationAxis(0),
+  V3.getRotationAxis(1),
+  V3.getRotationAxis(2)
+]
+
+/**
+ * `cubeRotationOnMiddle[axis][side]`
+ * @type {Record<number, Record<number, number>>}
+ */
+const cubeRotationOnMiddle = {
+  0: {
+    2: 90, 3: -90,
+    4: -90, 5: 90
+  },
+  1: {
+    0: -90, 1: 90,
+    4: 90, 5: -90
+  },
+  2: {
+    0: 90, 1: -90,
+    2: -90, 3: 90
+  }
+}
+
+/**
+ * `uvsTransformers[axis][side][angle]`
+ * @type {Record<number, Record<number, Record<number, (uvs: number[]) => number[]>>>}
+ */
+const uvsTransformers = {
+  0: {
+    0: uvsTransformerPresets.rcR2Rcc,
+    1: uvsTransformerPresets.rcR2Rcc,
+    2: uvsTransformerPresets.flipV23,
+    3: uvsTransformerPresets.flipV23,
+    4: uvsTransformerPresets.flipV12,
+    5: uvsTransformerPresets.flipV12
+  },
+  1: {
+    0: uvsTransformerPresets.rcfhFvRcc,
+    1: uvsTransformerPresets.rcfhFvRcc,
+    2: uvsTransformerPresets.rcR2Rcc,
+    3: uvsTransformerPresets.rcR2Rcc,
+    4: uvsTransformerPresets.rcFhRcfh,
+    5: uvsTransformerPresets.rcFhRcfh
+  },
+  2: {
+    0: uvsTransformerPresets.flipH23,
+    1: uvsTransformerPresets.flipH23,
+    2: uvsTransformerPresets.flipH12,
+    3: uvsTransformerPresets.flipH12,
+    4: uvsTransformerPresets.rcR2Rcc,
+    5: uvsTransformerPresets.rcR2Rcc
+  }
+}
+
+
+/**
+ * @param {number} axis
+ * @param {number} side
+ * @returns {boolean}
+ */
+const shouldInvertAngle = (axis, side) => {
+  return (
+    side === 0 ||
+    side === 2 && axis === 0 ||
+    side === 3 && axis === 2 ||
+    side === 5
+  )
+}
+
 
 /**
  * @extends {Transform<Cubie, null>}
@@ -34,7 +106,7 @@ export class RubicsTransform extends Transform {
   }
 }
 
-/** @typedef {(event: {axis: number, angle: number, index: number}) => void} TurnCallback */
+/** @typedef {(event: import('../types').Events['turn']) => void} TurnCallback */
 
 export class Rubics {
   /** @type {RubicsTransform} */
@@ -77,15 +149,19 @@ export class Rubics {
     this.cubies.forEach(cubie => cubie.render(program, gl, uvsVbo))
   }
 
+  /** @type {[number, number][]} */
+  static #axisDeltasMap = [
+    [3, 9],
+    [1, 9],
+    [1, 3]
+  ]
   /**
    * @param {number} axis
    * @param {number} index
    * @returns {Cubie[]}
    */
   getPlane(axis, index) {
-    const deltas = [1, 3, 9]
-    deltas.splice(axis, 1)
-    const [d1, d2] = deltas
+    const [d1, d2] = Rubics.#axisDeltasMap[axis]
     const initial = Math.pow(3, axis) * index
 
     /** @type {Cubie[]} */
@@ -101,19 +177,33 @@ export class Rubics {
   }
 
   /**
-   * @param {number} axis
-   * @param {number} index
-   * @param {number} angle
-   */
-  #turn(axis, index, angle) {
-    if (mod(angle, 4) === 0) {
+ * @param {number} axis
+ * @param {number} index
+ * @param {number} angle
+ * @param {number} side
+ * @param {Cubie[]} plane
+ */
+  #turn(axis, index, angle, side, plane) {
+    angle = mod(angle, 4)
+    if (angle === 0) {
       return
     }
-    const plane = this.getPlane(axis, index)
-    this.#swapOuterFacelets(plane, axis, angle)
-    if (index !== 1) {
-      this.#swapInnerFacelets(plane, axis, index, angle)
+
+    if (index === 1) {
+      this.#turn(axis, 0, -angle, side, this.getPlane(axis, 0))
+      this.#turn(axis, 2, -angle, side, this.getPlane(axis, 2))
+      this.transform.rotate(this.transform.rotationAxis[axis], angle * cubeRotationOnMiddle[axis][side])
+      return
     }
+
+    if (shouldInvertAngle(axis, side)) {
+      angle = mod(-angle, 4)
+    }
+
+    this.#swapOuterFacelets(plane, axis, angle)
+    this.#swapInnerFacelets(plane, axis, index, angle)
+    
+    this.#turnCallback({axis, index, angle})
   }
   /**
    * @param {Cubie[]} plane
@@ -121,37 +211,38 @@ export class Rubics {
    * @param {number} angle
    */
   #swapOuterFacelets(plane, axis, angle) {
-    const [s0, s1, s2, s3] = [0, 1, 2, 3, 4, 5].filter(s => {
-      return Math.floor(s / 2) !== axis
-    })
+    const [s0, s1, s2, s3] = sidesShiftMapper[axis]
     
     const facelets = [
       plane[0].getFaceletOfSide(s0),
       plane[1].getFaceletOfSide(s0),
       plane[2].getFaceletOfSide(s0),
-      plane[2].getFaceletOfSide(s3),
-      plane[5].getFaceletOfSide(s3),
-      plane[8].getFaceletOfSide(s3),
+      plane[2].getFaceletOfSide(s1),
+      plane[5].getFaceletOfSide(s1),
       plane[8].getFaceletOfSide(s1),
-      plane[7].getFaceletOfSide(s1),
-      plane[6].getFaceletOfSide(s1),
+      plane[8].getFaceletOfSide(s2),
+      plane[7].getFaceletOfSide(s2),
       plane[6].getFaceletOfSide(s2),
-      plane[3].getFaceletOfSide(s2),
-      plane[0].getFaceletOfSide(s2)
+      plane[6].getFaceletOfSide(s3),
+      plane[3].getFaceletOfSide(s3),
+      plane[0].getFaceletOfSide(s3)
     ]
 
+    /** @type {number[][]} */
+    const shiftedUvs = []
 
-    const uvs = facelets.map(({uvs}) => ({uvs}))
-    const offset = mod(3 * angle, 12)
-    const shiftedUVs = [...uvs.slice(offset), ...uvs.slice(0, offset)]
+    for (let index = 0; index < 12; index++) {
+      const shiftedIndex = mod(index + 3 * angle, 12)
+      const {uvs} = facelets[shiftedIndex]
 
-    facelets.forEach((facelet, index) => {
-      let {uvs} = shiftedUVs[index]
-      const a = mod(angle, 4)
-      const n = Rubics.#outerFaceletsRotations[axis][facelet.side]?.[a] ?? 0
-      const offset = mod(2 * n, 8)
-      facelet.uvs = [...uvs.slice(offset), ...uvs.slice(0, offset)]
-    })
+      const facelet = facelets[index]
+      const transformer = uvsTransformers[axis][facelet.side][angle]
+      shiftedUvs[index] = transformer(uvs)
+    }
+
+    for (let index = 0; index < 12; index++) {
+      facelets[index].uvs = shiftedUvs[index]
+    }
   }
   /**
    * @param {Cubie[]} plane
@@ -173,43 +264,23 @@ export class Rubics {
       plane[3].getFaceletOfSide(side)
     ]
 
-    const uvOffset = mod(2 * angle, 8)
-    const uvRotation = mod(2 * ((axis % 2) * 2 === index ? angle : 4 - angle), 8)
-    const uvs = facelets.map(({uvs}) => ({uvs}))
-    const shiftedUVs = [...uvs.slice(uvOffset), ...uvs.slice(0, uvOffset)]
+    /** @type {number[][]} */
+    const shiftedUvs = []
+    const transformer = uvsTransformers[axis][side][angle]
 
-    facelets.forEach((facelet, index) => {
-      const {uvs} = shiftedUVs[index]
-      facelet.uvs = [...uvs.slice(uvRotation), ...uvs.slice(0, uvRotation)]
-    })
+    for (let index = 0; index < 8; index++) {
+      const shiftedIndex = mod(index + 2 * angle, 8)
+      const {uvs} = facelets[shiftedIndex]
+      shiftedUvs[index] = transformer(uvs)
+    }
+
+    for (let index = 0; index < 8; index++) {
+      facelets[index].uvs = shiftedUvs[index]
+    }
     
     const center = plane[4].getFaceletOfSide(side)
-    const centerUVs = center.uvs
-    center.uvs = [...centerUVs.slice(uvRotation), ...centerUVs.slice(0, uvRotation)]
+    center.uvs = transformer(center.uvs)
   }
-
-  /** @type {Record<number, Record<number, Record<number, number>>>} */
-  static #outerFaceletsRotations = {
-    0: {
-      2: {1:  1, 2:  1},
-      3: {1: -1, 2: -1},
-      4: {2:  1, 3:  1},
-      5: {2: -1, 3: -1}
-    },
-    1: {
-      0: {2:  1, 3:  1},
-      1: {2: -1, 3: -1},
-      4: {1: -1, 2: -1},
-      5: {1:  1, 2:  1}
-    },
-    2: {
-      0: {1: -1, 2: -1},
-      1: {1:  1, 2:  1},
-      2: {2: -1, 3: -1},
-      3: {2:  1, 3:  1}
-    }
-  }
-
 
   // manual rotation
 
@@ -257,20 +328,22 @@ export class Rubics {
   #targetAngle = 0
   #rotationIndex = 0
   #rotationAxisIndex = 0
+  #side = 0
 
   /**
    * @param {number} axis
    * @param {number} index
    * @param {number} angle
+   * @param {number} side
    */
-  finishRotation(axis, index, angle) {
+  finishRotation(axis, index, angle, side) {
     this.#rotatingAutomatic = true
     this.#turnProgress = 0
     this.#targetAngle = angle
     this.#initialAngle = this.#currentAngle
     this.#rotationIndex = index
     this.#rotationAxisIndex = axis
-    this.#turnCallback({axis, index, angle})
+    this.#side = side
   }
 
   /** @param {number} delta */
@@ -286,7 +359,13 @@ export class Rubics {
         cubie.transform.position = backupPosition
         cubie.transform.rotation = backupRotation
       })
-      this.#turn(this.#rotationAxisIndex, this.#rotationIndex, this.#targetAngle)
+      this.#turn(
+        this.#rotationAxisIndex,
+        this.#rotationIndex,
+        this.#targetAngle,
+        this.#side,
+        this.#rotatingCubies.map(({cubie}) => cubie)
+      )
       return
     }
 

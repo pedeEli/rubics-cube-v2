@@ -25,3 +25,13 @@ canvas {
 canvas[data-rubics-cube-debug] {
   pointer-events: none;
 }
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  z-index: 100;
+  top: 10px;
+  left: 10px;
+}

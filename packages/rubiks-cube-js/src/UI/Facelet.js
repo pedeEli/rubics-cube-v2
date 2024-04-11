@@ -7,7 +7,7 @@ import {Cubie} from './Cubie'
 
 /**
  * @extends {Transform<any, Cubie>}
- */
+*/
 export class FaceletTransform extends Transform {
   /** @type {V3} */
   left

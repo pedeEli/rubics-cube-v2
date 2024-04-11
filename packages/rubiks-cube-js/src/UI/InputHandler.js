@@ -61,7 +61,7 @@ export class InputHandler {
     if (this.#action.type === 'rotatingSide' && this.#action.side) {
       const info = this.#action[this.#action.side]
       const angle = Math.round(info.angle / 90)
-      this.#rubics.finishRotation(info.axis, info.index, angle)
+      this.#rubics.finishRotation(info.axis, info.index, angle, this.#action.facelet.side)
     }
     this.#action = action
   }
@@ -185,23 +185,32 @@ export class InputHandler {
         }
         return info
       })
+
+    const sideInvertMap = [
+      false, true,
+      true, false,
+      false, true
+    ]
+    const invert = sideInvertMap[hovering.side]
     
     const mouse = new V2(offsetX, this.#canvas.height - offsetY)
     if (Math.abs(axis1.default.dot(top)) > .99) {
       this.#setAction({
         type: 'rotatingSide',
         mouse,
-        down: this.#getTurnDirection(axis1, top, downDir, true),
-        right: this.#getTurnDirection(axis2, left, rightDir, false),
-        side: null
+        down: this.#getTurnDirection(axis1, top, downDir, true !== invert),
+        right: this.#getTurnDirection(axis2, left, rightDir, false !== invert),
+        side: null,
+        facelet: hovering
       })
     } else {
       this.#setAction({
         type: 'rotatingSide',
         mouse,
-        down: this.#getTurnDirection(axis2, top, downDir, true),
-        right: this.#getTurnDirection(axis1, left, rightDir, false),
-        side: null
+        down: this.#getTurnDirection(axis2, top, downDir, true !== invert),
+        right: this.#getTurnDirection(axis1, left, rightDir, false !== invert),
+        side: null,
+        facelet: hovering
       })
     }
   }
