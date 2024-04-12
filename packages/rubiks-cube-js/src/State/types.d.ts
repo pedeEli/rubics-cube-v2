@@ -11,6 +11,9 @@ export type CornerOrientation = 0 | 1 | 2
 export type Edge = `${UD}${FB | RL}` | `${FB}${RL}`
 export type EdgeOrientation = 0 | 1
 
+export type Center = UD | RL | FB
+export type CenterOrientation = 0 | 1 | 2 | 3
+
 export type Events = {
 	change: import('.').State
 }

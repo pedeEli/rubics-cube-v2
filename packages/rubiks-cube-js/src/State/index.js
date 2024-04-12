@@ -1,5 +1,6 @@
 import {Corners} from './Corners'
 import {Edges} from './Edges'
+import {Centers} from './Center'
 import {convertTurnToTurnBase, convertTurnToEvent} from '../Converter'
 import {uvsTransformerPresets, cubiesShiftMapper, sidesShiftMapper} from '../UI/UVs'
 import {isInside, indexToPosition, positionToUvs} from '../UI/Cubie'
@@ -12,15 +13,26 @@ import {mod} from '../Math/Utils'
  */
 
 export class State {
-  corners = new Corners()
-  edges = new Edges()
+  #corners = new Corners()
+  #edges = new Edges()
+  #centers = new Centers()
+  /** @type {boolean} */
+  #trackCenters
+
+  /** @param {boolean} trackCenters */
+  constructor(trackCenters) {
+    this.#trackCenters = trackCenters
+  }
 
   /** @param {Turn} turn */
   applyTurn(turn) {
     const baseTurns = convertTurnToTurnBase(turn)
     for (const base of baseTurns) {
-      this.corners.applyTurn(base)
-      this.edges.applyTurn(base)
+      this.#corners.applyTurn(base)
+      this.#edges.applyTurn(base)
+      if (this.#trackCenters) {
+        this.#centers.applyTurn(base)
+      }
     }
   }
 
@@ -29,14 +41,21 @@ export class State {
    * @param {import('../UI/Rubics').Rubics} rubics
    */
   applyState(uvs, rubics) {
-    this.corners.applyState(uvs, rubics)
-    this.edges.applyState(uvs, rubics)
+    this.#corners.applyState(uvs, rubics)
+    this.#edges.applyState(uvs, rubics)
+    if (this.#trackCenters) {
+      this.#centers.applyState(uvs, rubics)
+    }
   }
 
   stringify() {
-    const corners = this.corners.stringify()
-    const edges = this.edges.stringify()
-    return `${corners}-${edges}`
+    const corners = this.#corners.stringify()
+    const edges = this.#edges.stringify()
+    if (!this.#trackCenters) {
+      return `${corners}-${edges}`
+    }
+    const centers = this.#centers.stringify()
+    return `${corners}-${edges}-${centers}`
   }
 
   /**
@@ -44,12 +63,17 @@ export class State {
    * @return {boolean}
    */
   parse(str) {
-    const [corners, edges] = str.split('-')
-    if (!this.corners.parse(corners)) {
+    const [corners, edges, centers] = str.split('-')
+    if (!this.#corners.parse(corners)) {
       return false
     }
-    if (!this.edges.parse(edges)) {
+    if (!this.#edges.parse(edges)) {
       return false
+    }
+    if (this.#trackCenters) {
+      if (!this.#centers.parse(centers)) {
+        return false
+      }
     }
     return true
   }

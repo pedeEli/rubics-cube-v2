@@ -1,4 +1,3 @@
-import {V3} from '../Math/Vector'
 import {createSideToUvs, transformSidetoUvs, setUvs} from '.'
 
 /**
@@ -640,10 +639,13 @@ const orderIndexToCubieIndex = [
 ]
 
 export class Edges {
-  static order = /** @type {Permutation} */ (['UF', 'UL', 'UB', 'UR', 'FR', 'FL', 'BL', 'BR', 'DF', 'DL', 'DB', 'DR'])
+  /** @type {Permutation} */ 
+  static order = ['UF', 'UL', 'UB', 'UR', 'FR', 'FL', 'BL', 'BR', 'DF', 'DL', 'DB', 'DR']
 
-  permutation = /** @type {Permutation} */ ([...Edges.order])
-  orientation = /** @type {Orientation} */ (Array(12).fill(0))
+  /** @type {Permutation} */ 
+  permutation = [...Edges.order]
+  /** @type {Orientation} */
+  orientation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
   /** @param {TurnBase} turn */
   applyTurn(turn) {
@@ -679,15 +681,7 @@ export class Edges {
     }
   }
 
-  /** @param {E} edge */
-  static edgeToPosition(edge) {
-    return new V3(
-      edge[1] === 'R' ? 0 : edge[1] === 'L' ? 2 : 1,
-      edge[0] === 'D' ? 0 : edge[0] === 'U' ? 2 : 1,
-      edge[0] === 'F' || edge[1] === 'F' ? 0 : edge[0] === 'B' || edge[0] === 'B' ? 2 : 1
-    )
-  }
-
+  /** @returns {string} */
   stringify() {
     const permutation = this.permutation.join('.')
     const orientation = this.orientation.join('.')

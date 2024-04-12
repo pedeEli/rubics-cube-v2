@@ -40,6 +40,8 @@ export class RubicsCube {
   #inputHandler
   /** @type {State} */
   #state
+  /** @type {boolean} */
+  #trackCenters
 
   #frame = 0
   #resizeHandler = RubicsCube.#getResizeHandler(this)
@@ -58,12 +60,14 @@ export class RubicsCube {
 	 * @param {ImageData | HTMLImageElement} image
 	 * @param {number[][][]} uvs
 	 * @param {number[][]} hoveringColors
+   * @param {boolean} trackCenters
 	 */
-  constructor(canvasData, image, uvs, hoveringColors) {
+  constructor(canvasData, image, uvs, hoveringColors, trackCenters) {
 		this.#canvasData = canvasData
 		this.#image = image
 		this.#uvs = uvs
 		this.#hoveringColors = hoveringColors
+    this.#trackCenters = trackCenters
 	}
 
   start() {
@@ -235,7 +239,7 @@ export class RubicsCube {
     this.#camera = new Camera(new V3(0, 0, -10), V3.zero, V3.up, 45, window.innerWidth, window.innerHeight, .1, 100)
     this.#rubics = new Rubics(Quaternion.identity, this.#uvs, hoveringColors, this.#turnHandler.bind(this))
     this.#inputHandler = new InputHandler(canvas, this.#rubics, this.#camera)
-    this.#state = new State()
+    this.#state = new State(this.#trackCenters)
   }
 
   get transform() {

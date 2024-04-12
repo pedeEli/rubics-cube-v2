@@ -28,7 +28,8 @@ image.addEventListener('load', () => {
     'data-rubics-cube',
     image,
     uvs,
-    defaultHovorvingColors
+    defaultHovorvingColors,
+    true
   )
   
   const state = new URL(location.toString()).searchParams.get('state')

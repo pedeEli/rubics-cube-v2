@@ -1,4 +1,3 @@
-import {V3} from '../Math/Vector'
 import {createSideToUvs, transformSidetoUvs, setUvs} from '.'
 
 /**
@@ -377,10 +376,13 @@ const orderIndexToCubieIndex = [
 
 
 export class Corners {
-  static order = /** @type {Permutation} */ (['URF', 'ULF', 'ULB', 'URB', 'DRF', 'DLF', 'DLB', 'DRB'])
+  /** @type {Permutation} */
+  static order = ['URF', 'ULF', 'ULB', 'URB', 'DRF', 'DLF', 'DLB', 'DRB']
 
-  permutation = /** @type {Permutation} */ ([...Corners.order])
-  orientation = /** @type {Orientation} */ (Array(8).fill(0))
+  /** @type {Permutation} */
+  permutation = [...Corners.order]
+  /** @type {Orientation} */
+  orientation = [0, 0, 0, 0, 0, 0, 0, 0]
 
   /** @param {TurnBase} turn */
   applyTurn(turn) {
@@ -414,15 +416,6 @@ export class Corners {
       const targetIndex = orderIndexToCubieIndex[i]
       setUvs(targetIndex, rubics, sideToUvs)
     }
-  }
-
-  /** @param {C} corner */
-  static cornerToPosition(corner) {
-    return new V3(
-      corner[1] === 'R' ? 0 : 2,
-      corner[0] === 'D' ? 0 : 2,
-      corner[2] === 'F' ? 0 : 2
-    )
   }
 
   stringify() {
