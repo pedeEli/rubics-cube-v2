@@ -1,7 +1,7 @@
 import {Corners} from './corners'
 import {Edges} from './edges'
 import {Centers} from './centers'
-import {convertTurnToTurnBase, convertTurnToEvent} from '../converter'
+import {convertTurnToTurnBase, convertTurnToAia} from '../converter'
 import {uvsTransformerPresets, cubiesShiftMapper, sidesShiftMapper} from '../ui/uvs'
 import {isInside, indexToPosition, positionToUvs} from '../ui/cubie'
 import {mod} from '../math/utils'
@@ -18,6 +18,8 @@ export class State {
   #centers = new Centers()
   /** @type {boolean} */
   #trackCenters
+  
+  stateInfo = new StateInfo(this)
 
   /** @param {boolean} trackCenters */
   constructor(trackCenters) {
@@ -76,6 +78,21 @@ export class State {
       }
     }
     return true
+  }
+}
+
+export class StateInfo {
+  /** @type {State} */
+  #state
+
+  /** @param {State} state */
+  constructor(state) {
+    this.#state = state
+  }
+
+  /** @returns {string} */
+  toString() {
+    return this.#state.stringify()
   }
 }
 
@@ -141,7 +158,7 @@ export const createSideToUvs = (originIndex, uvs) => {
  */
 export const transformSidetoUvs = (originIndex, sideToUvs, turns) => {
   for (const turn of turns) {
-    let {axis, index, angle} = convertTurnToEvent(turn)
+    let {axis, index, angle} = convertTurnToAia(turn)
     const innerSide = axis * 2 + Math.sign(index)
 
     /** @type {Record<number, number[]>} */

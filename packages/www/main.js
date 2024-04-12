@@ -37,9 +37,9 @@ image.addEventListener('load', () => {
     rubiksCube.setState(state)
   }
 
-  rubiksCube.on('state', state => {
+  rubiksCube.on('change', event => {
     const url = new URL(location.toString())
-    url.searchParams.set('state', state)
+    url.searchParams.set('state', event.state.toString())
     history.replaceState(null, '', url)
   })
 

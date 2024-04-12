@@ -106,7 +106,7 @@ export class RubiksTransform extends Transform {
   }
 }
 
-/** @typedef {(event: import('../types').Events['turn']) => void} TurnCallback */
+/** @typedef {(event: import('../types').AIA) => void} TurnCallback */
 
 export class Rubiks {
   /** @type {RubiksTransform} */

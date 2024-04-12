@@ -3,6 +3,6 @@
 	"scripts": {
 		"dev": "pnpm --filter www dev",
 		"build": "pnpm --filter www build",
-		"check": "pnpm --filter rubiks-cube-v2 check"
+		"check": "pnpm --filter rubiks-cube-js check"
 	}
 }

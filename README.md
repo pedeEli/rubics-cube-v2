@@ -1,33 +1,33 @@
-# Rubics Cube for the web
+# Rubiks Cube for the web
 
-This library can be used to embed a rubics cube into any website. Supports mouse and touch, is pure js and does not use any libraries.
+This library can be used to embed a rubiks cube into any website. Supports mouse and touch, is pure js and does not use any libraries.
 
 ## Usage
 
 First install
 ```
-npm install rubics-cube
+npm install rubiks-cube
 ```
 
-then create a rubics cube and start it
+then create a rubiks cube and start it
 ```typescript
-import RubicsCube, {defaultTexture, defaultUVs, defaultHoveringColors} from 'rubics-cube'
+import {RubiksCube, defaultTexture, defaultUVs, defaultHoveringColors} from 'rubiks-cube-js'
 
-const rubicsCube = new RubicsCube(
+const rubiksCube = new RubiksCube(
   attributeName,
   defaultTexture,
   defaultUVs,
   defaultHoveringColors
 )
-rubicsCube.start()
+rubiksCube.start()
 ```
 webgl is automaticly instanciated when first calling ```start()```.
 
 ### `attributeName`
 Specifies the data attribute on the canvas
 ```html
-<canvas data-rubics-cube></canvas>
-<!-- attributeName = 'data-rubics-cube' -->
+<canvas data-rubiks-cube></canvas>
+<!-- attributeName = 'data-rubiks-cube' -->
 ```
 
 ### `texture`
@@ -58,12 +58,12 @@ Indices have the following order: (brackets use default values)
 ### Facelet
 This is a bit more complicated to explain. The indices follow the same [rule](#indices) as the [sides](#side). For example if you look at the front side without moving the cube index 0 would be the bottom right facelet and index 1 would be 1 to the left. Thats because the indices go first from left to right and the from bottom to top. This means index 0, 1 and 2 are the bottom row, 3, 4 and 5 the row above and so on. And remember always from left to right. In this example we were able to ignore the third [index rule](#indices) because these facelets where pointed at the front so it doesn't make sense to use this rule. Following the same logic we can always ignore on rule when figuring the facelet indices out.
 
-If you want a visual way to see all indices use the following code and copy the [numbers.png](https://github.com/pedeEli/rubics-cube-v2/blob/main/number.png) image to your source files
+If you want a visual way to see all indices use the following code and copy the [numbers.png](https://github.com/pedeEli/rubiks-cube-v2/blob/main/number.png) image to your source files
 ```typescript
-import RubicsCube, {defaultHovorvingColors} from './RubicsCube'
+import {RubiksCube, defaultHovorvingColors} from './RubiksCube'
 
 const image = new Image()
-image.src = 'number.png' // or 'https://raw.githubusercontent.com/pedeEli/rubics-cube-v2/main/number.png'
+image.src = 'number.png' // or 'https://raw.githubusercontent.com/pedeEli/rubiks-cube-v2/main/number.png'
 
 const uvs = Array(6).fill(null).map((_, side) => {
   const bottom = 0.5 + Math.floor(side / 3) * 0.5
@@ -84,14 +84,14 @@ const uvs = Array(6).fill(null).map((_, side) => {
 })
 
 image.addEventListener('load', () => {
-  const rubicsCube = new RubicsCube(
-    'data-rubics-cube',
+  const rubiksCube = new RubiksCube(
+    'data-rubiks-cube',
     image,
     uvs,
     defaultHovorvingColors
   )
 
-  rubicsCube.start()
+  rubiksCube.start()
 })
 
 ```

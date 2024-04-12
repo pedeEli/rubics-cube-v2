@@ -11,7 +11,7 @@ import {vertex, fragment} from './shaders/facelet.glsl'
 
 import {State} from './state'
 
-import {convertEventToTurn} from './converter'
+import {convertAiaToTurn} from './converter'
 
 
 /** @typedef {import('./types').Events} Events */
@@ -259,24 +259,21 @@ export class RubiksCube {
     this.#listeners.set(name, set)
   }
 	/**
-	 * @param {Events['turn']} event
+	 * @param {import('./types').AIA} aia
 	 */
-  #turnHandler(event) {
-    const turn = convertEventToTurn(event)
+  #turnHandler(aia) {
+    const turn = convertAiaToTurn(aia)
     this.#state.applyTurn(turn)
     
-    const turnHandlers = this.#listeners.get('turn')
-    if (turnHandlers) {
-      for (const callback of turnHandlers) {
-        callback(event)
-      }
-    }
-
-    const stateHandlers = this.#listeners.get('state')
-    if (stateHandlers) {
-      const state = this.#state.stringify()
-      for (const callback of stateHandlers) {
-        callback(state)
+    /** @type {Set<(event: Events['change']) => void> | undefined} */
+    const changeHandlers = this.#listeners.get('change')
+    if (changeHandlers) {
+      for (const callback of changeHandlers) {
+        callback({
+          ...aia,
+          turn,
+          state: this.#state.stateInfo
+        })
       }
     }
   }

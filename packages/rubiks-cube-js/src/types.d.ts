@@ -3,6 +3,9 @@ import type {Cubie} from './ui/cubie'
 
 import type {V2, V3} from './math/vector'
 
+import type {StateInfo} from './state'
+import type {Turn} from './state/types'
+
 export type AxisInfo = {
   default: V3
   inverted: V3
@@ -45,8 +48,15 @@ export interface Uniform {
   setUniform(gl: WebGL2RenderingContext, location: WebGLUniformLocation): void
 }
 
+export type AIA = {
+  axis: number,
+  index: number,
+  angle: number
+}
 
 export type Events = {
-  turn: {axis: number, index: number, angle: number},
-  state: string
+  change: AIA & {
+    turn: Turn,
+    state: StateInfo
+  }
 }

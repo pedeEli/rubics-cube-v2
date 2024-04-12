@@ -1,38 +1,38 @@
 /**
- * @typedef {import('./types').Events['turn']} TurnEvent
+ * @typedef {import('./types').AIA} AIA
  * @typedef {import('./state/types').TurnBase} TurnBase
  * @typedef {import('./state/types').Turn} Turn
  */
 
 /** @type {[a: TurnBase, b: TurnBase, invert: boolean][]} */
-const eventToTurnMap = [
+const axisToTurn = [
 	['R', 'L', false],
 	['D', 'U', true],
 	['F', 'B', false]
 ]
 
 /**
- * @param {TurnEvent} event
+ * @param {AIA} aia
  * @returns {Turn}
  */
-export const convertEventToTurn = (event) => {
-	if (event.index === 1) {
+export const convertAiaToTurn = (aia) => {
+	if (aia.index === 1) {
 		throw new Error('Cannot convert middle turns')
 	}
 
-	let [a, b, invert] = eventToTurnMap[event.axis]
+	let [a, b, invert] = axisToTurn[aia.axis]
 	
-	const turn = event.index === 0 ? a : b
+	const turn = aia.index === 0 ? a : b
 
-	if (event.angle === 2) {
+	if (aia.angle === 2) {
 		return `${turn}2`
 	}
 	
-	if (event.index === 2) {
+	if (aia.index === 2) {
 		invert = !invert
 	}
 
-	if (event.angle === 3 && !invert || event.angle === 1 && invert) {
+	if (aia.angle === 3 && !invert || aia.angle === 1 && invert) {
 		return `${turn}'`
 	}
 
@@ -40,7 +40,7 @@ export const convertEventToTurn = (event) => {
 }
 
 /** @type {Record<TurnBase, [axis: number, index: number, invert: boolean]>} */
-const turnToEventMap = {
+const turnToAia = {
 	R: [0, 0, false],
 	L: [0, 2, false],
 	D: [1, 0, true],
@@ -51,12 +51,12 @@ const turnToEventMap = {
 
 /**
  * @param {Turn} turn
- * @returns {TurnEvent}
+ * @returns {AIA}
  */
-export const convertTurnToEvent = (turn) => {
+export const convertTurnToAia = (turn) => {
 	const base = /** @type {TurnBase} */ (turn[0])
 
-	const [axis, index, invert] = turnToEventMap[base]
+	const [axis, index, invert] = turnToAia[base]
 
 	if (turn.endsWith('2')) {
 		return {axis, index, angle: 2}
