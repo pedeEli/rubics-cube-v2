@@ -44,26 +44,25 @@ export class Centers {
 		}
 	}
 
-	/** @returns {string} */
-	stringify() {
-		return this.orientation.join('.')
+	/** @returns {number[]} */
+	encode() {
+		let o = 0
+		for (const orientation of this.orientation) {
+			o = o << 2
+			o += orientation
+		}
+		return [
+      (o >> 0)  & 0b11111111,
+      (o >> 8)  & 0b11111111
+		]
 	}
 
-	/**
-	 * @param {string} str
-	 * @returns {boolean}
-	 */
-	parse(str) {
-		const parts = str.split('.').map(Number)
-		if (parts.length !== 6) {
-			return false
+	/** @param {number[]} code */
+	decode(code) {
+		let o = code[0] + (code[1] << 8)
+		for (let i = 5; i >= 0; i--) {
+			this.orientation[i] = /** @type {CO} */ (o & 0b11)
+			o = o >> 2
 		}
-		for (const part of parts) {
-			if (part < 0 || part > 3) {
-				return false
-			}
-		}
-		this.orientation = /** @type {Orientation} */ (parts)
-		return true
 	}
 }

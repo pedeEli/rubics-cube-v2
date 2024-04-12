@@ -418,28 +418,48 @@ export class Corners {
     }
   }
 
-  stringify() {
-    const permutation = this.permutation.join('.')
-    const orientation = this.orientation.join('.')
-    return `${permutation}_${orientation}`
+  /** @returns {number[]} */
+  encode() {
+    let p = 0
+    for (const permutation of this.permutation) {
+      p = p << 3
+      p += Corners.order.indexOf(permutation)
+    }
+    let o = 0
+    for (const orientation of this.orientation) {
+      o = o << 2
+      o += orientation
+    }
+    return [
+      (p >> 0)  & 0b11111111,
+      (p >> 8)  & 0b11111111,
+      (p >> 16) & 0b11111111,
+      (o >> 0)  & 0b11111111,
+      (o >> 8)  & 0b11111111
+    ]
   }
 
   /**
-   * @param {string} str
-   * @return {boolean}
+   * @param {number[]} code
+   * @returns {boolean}
    */
-  parse(str) {
-    const [p, o] = str.split('_')
-    const permutation = Corners.#parsePermutation(p)
-    if (permutation === null) {
-      return false
+  decode(code) {
+    let p = code[0] + (code[1] << 8) + (code[2] << 16)
+    let o = code[3] + (code[4] << 8)
+    for (let i = 7; i >= 0; i--) {
+      const p1 = p & 0b111
+      if (p1 >= 8) {
+        return false
+      }
+      this.permutation[i] = Corners.order[p1]
+      p = p >> 3
+      const o1 = o & 0b11
+      if (o1 > 2) {
+        return false
+      }
+      this.orientation[i] = /** @type {CO} */ (o1)
+      o = o >> 2
     }
-    const orientation = Corners.#parseOrientation(o)
-    if (orientation === null) {
-      return false
-    }
-    this.permutation = permutation
-    this.orientation = orientation
     return true
   }
 
@@ -452,47 +472,5 @@ export class Corners {
     const permutation = this.permutation[index]
     const orientation = this.orientation[index]
     return map[permutation][start][orientation]
-  }
-
-  /** 
-   * @param {string} str
-   * @returns {Permutation | null}
-   */
-  static #parsePermutation(str) {
-    const parts = str.split('.')
-    if (parts.length !== 8) {
-      return null
-    }
-    const check = Array(8).fill(false)
-    for (let i = 0; i < 8; i++) {
-      const index = Corners.order.indexOf(/** @type {C} */ (parts[i]))
-      if (index === -1 || check[index]) {
-        return null
-      }
-      check[index] = true
-    }
-    return /** @type {Permutation} */ (parts)
-  }
-  /**
-   * @param {string} str
-   * @returns {Orientation | null}
-   */
-  static #parseOrientation(str) {
-    const parts = str.split('.').map(Number)
-    if (parts.length !== 8) {
-      return null
-    }
-    let sum = 0
-    for (let i = 0; i < 8; i++) {
-      const part = parts[i]
-      if (part < 0 || part > 2) {
-        return null
-      }
-      sum += part
-    }
-    if (sum % 3 !== 0) {
-      return null
-    }
-    return /** @type {Orientation} */ (parts)
   }
 }

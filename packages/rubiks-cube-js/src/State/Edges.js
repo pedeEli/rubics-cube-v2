@@ -681,29 +681,49 @@ export class Edges {
     }
   }
 
-  /** @returns {string} */
-  stringify() {
-    const permutation = this.permutation.join('.')
-    const orientation = this.orientation.join('.')
-    return `${permutation}_${orientation}`
+  /** @returns {number[]} */
+  encode() {
+    /** @type {number[]} */
+    let p = []
+    for (let i = 0; i < 6; i++) {
+      const p1 = Edges.order.indexOf(this.permutation[i * 2])
+      const p2 = Edges.order.indexOf(this.permutation[i * 2 + 1])
+      p.push(
+        (p2 << 4) + p1
+      )
+    }
+    let o = 0
+    for (const orientation of this.orientation) {
+      o = o << 1
+      o += orientation
+    }
+    return [
+      ...p,
+      (o >> 0) & 0b11111111,
+      (o >> 8) & 0b11111111
+    ]
   }
 
   /**
-   * @param {string} str
+   * @param {number[]} code
    * @returns {boolean}
    */
-  parse(str) {
-    const [p, o] = str.split('_')
-    const permutation = Edges.#parsePermutation(p)
-    if (permutation === null) {
-      return false
+  decode(code) {
+    for (let i = 0; i < 6; i++) {
+      const p1 = code[i] & 0b1111
+      const p2 = (code[i] >> 4) & 0b1111
+      if (p1 >= 12 || p2 >= 12) {
+        return false
+      }
+      this.permutation[i * 2] = Edges.order[p1]
+      this.permutation[i * 2 + 1] = Edges.order[p2]
     }
-    const orientation = Edges.#parseOrientation(o)
-    if (orientation === null) {
-      return false
+
+    let o = code[6] + (code[7] << 8)
+    for (let i = 11; i >= 0; i--) {
+      this.orientation[i] = /** @type {EO} */ (o & 0b1)
+      o = o >> 1
     }
-    this.permutation = permutation
-    this.orientation = orientation
     return true
   }
 
@@ -716,47 +736,5 @@ export class Edges {
     const permutation = this.permutation[index]
     const orientation = this.orientation[index]
     return map[permutation][start][orientation]
-  }
-
-  /**
-   * @param {string} str
-   * @returns {Permutation | null}
-   */
-  static #parsePermutation(str) {
-    const parts = str.split('.')
-    if (parts.length !== 12) {
-      return null
-    }
-    const check = Array(12).fill(false)
-    for (let i = 0; i < 12; i++) {
-      const index = Edges.order.indexOf(/** @type {E} */(parts[i]))
-      if (index === -1 || check[index]) {
-        return null
-      }
-      check[index] = true
-    }
-    return /** @type {Permutation} */ (parts)
-  }
-  /**
-   * @param {string} str
-   * @returns {Orientation | null}
-   */
-  static #parseOrientation(str) {
-    const parts = str.split('.').map(Number)
-    if (parts.length !== 12) {
-      return null
-    }
-    let sum = 0
-    for (let i = 0; i < 12; i++) {
-      const part = parts[i]
-      if (part < 0 || part > 1) {
-        return null
-      }
-      sum += part
-    }
-    if (sum % 2 !== 0) {
-      return null
-    }
-    return /** @type {Orientation} */ (parts)
   }
 }

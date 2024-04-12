@@ -125,7 +125,7 @@ export class RubiksCube {
       this.#initialized = true
     }
 
-    if (!this.#state.parse(stateStr)) {
+    if (!this.#state.decode(stateStr)) {
       return false
     }
 

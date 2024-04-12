@@ -50,33 +50,65 @@ export class State {
     }
   }
 
-  stringify() {
-    const corners = this.#corners.stringify()
-    const edges = this.#edges.stringify()
-    if (!this.#trackCenters) {
-      return `${corners}-${edges}`
+  /** @returns {string} */
+  encode() {
+    /** @type {number[]} */
+    const code = []
+    code.push(...this.#corners.encode())
+    code.push(...this.#edges.encode())
+    if (this.#trackCenters) {
+      code.push(...this.#centers.encode())
     }
-    const centers = this.#centers.stringify()
-    return `${corners}-${edges}-${centers}`
+    const array = new Uint8Array(code)
+    return btoa(String.fromCharCode(...array))
   }
 
   /**
    * @param {string} str
-   * @return {boolean}
+   * @returns {boolean}
    */
-  parse(str) {
-    const [corners, edges, centers] = str.split('-')
-    if (!this.#corners.parse(corners)) {
+  decode(str) {
+    const data = atob(str)
+    if (data.length !== (this.#trackCenters ? 15 : 13)) {
       return false
     }
-    if (!this.#edges.parse(edges)) {
+    
+    /** @type {number[]} */
+    const code = []
+    for (let i = 0; i < data.length; i++) {
+      code.push(data.charCodeAt(i))
+    }
+
+    const corners = this.#corners
+    /** @type {typeof corners['permutation']} */
+    const cp = [...corners.permutation]
+    /** @type {typeof corners['orientation']} */
+    const co = [...corners.orientation]
+
+    if (!corners.decode(code.slice(0, 5))) {
+      corners.permutation = cp
+      corners.orientation = co
       return false
     }
+
+    const edges = this.#edges
+    /** @type {typeof edges['permutation']} */
+    const ep = [...edges.permutation]
+    /** @type {typeof edges['orientation']} */
+    const eo = [...edges.orientation]
+
+    if (!edges.decode(code.slice(5, 13))) {
+      corners.permutation = cp
+      corners.orientation = co
+      edges.permutation = ep
+      edges.orientation = eo
+      return false
+    }
+
     if (this.#trackCenters) {
-      if (!this.#centers.parse(centers)) {
-        return false
-      }
+      this.#centers.decode(code.slice(13))
     }
+
     return true
   }
 }
@@ -92,7 +124,7 @@ export class StateInfo {
 
   /** @returns {string} */
   toString() {
-    return this.#state.stringify()
+    return this.#state.encode()
   }
 }
 
