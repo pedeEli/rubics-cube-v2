@@ -1,5 +1,5 @@
 {
-  "name": "rubiks",
+  "name": "rubiks-js",
   "version": "1.0.0",
   "type": "module",
   "description": "A rubiks cube with no dependencies. Can use custom images for faces. The state of the cube can be safed.",

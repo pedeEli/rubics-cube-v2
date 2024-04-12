@@ -1,6 +1,6 @@
 import './style.css'
 
-import {RubiksCube, defaultHovorvingColors, defaultTexture, defaultUVs} from 'rubiks'
+import {RubiksCube, defaultHovorvingColors, defaultTexture, defaultUVs} from 'rubiks-js'
 
 
 const rubiksCube = new RubiksCube(

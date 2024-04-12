@@ -11,7 +11,7 @@ npm install rubiks
 
 then create a rubiks cube and start it
 ```javascript
-import {RubiksCube, defaultTexture, defaultUVs, defaultHoveringColors} from 'rubiks'
+import {RubiksCube, defaultTexture, defaultUVs, defaultHoveringColors} from 'rubiks-js'
 
 const rubiksCube = new RubiksCube(
   attributeName,
@@ -91,7 +91,7 @@ This is a bit more complicated to explain. The indices follow the same [rule](#i
 
 If you want a visual way to see all indices use the following code and copy the [numbers.png](https://github.com/pedeEli/rubiks-cube-v2/blob/main/number.png) image to your source files
 ```javascript
-import {RubiksCube, defaultHovorvingColors} from './RubiksCube'
+import {RubiksCube, defaultHovorvingColors} from 'rubiks-js'
 
 const image = new Image()
 image.src = 'number.png' // or 'https://raw.githubusercontent.com/pedeEli/rubiks-cube-v2/main/number.png'

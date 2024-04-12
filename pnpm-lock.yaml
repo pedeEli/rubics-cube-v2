@@ -4,7 +4,7 @@ importers:
 
   .: {}
 
-  packages/rubiks:
+  packages/rubiks-js:
     devDependencies:
       typescript:
         specifier: ^5.4.3
@@ -12,9 +12,9 @@ importers:
 
   packages/www:
     devDependencies:
-      rubiks:
+      rubiks-js:
         specifier: workspace:*
-        version: link:../rubiks
+        version: link:../rubiks-js
       vite:
         specifier: ^5.2.0
         version: 5.2.0

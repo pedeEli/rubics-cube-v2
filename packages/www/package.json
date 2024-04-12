@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "vite": "^5.2.0",
-    "rubiks": "workspace:*"
+    "rubiks-js": "workspace:*"
   }
 }
