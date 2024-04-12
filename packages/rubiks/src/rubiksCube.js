@@ -70,6 +70,10 @@ export class RubiksCube {
     this.#trackCenters = trackCenters
 	}
 
+  /**
+   * Starts rendering the cube and listening for user inputs.
+   * Automaticly initializes webgl and pointer event listeners.
+   */
   start() {
     if (!this.#initialized) {
       this.#initialize()
@@ -109,20 +113,26 @@ export class RubiksCube {
     this.#frame = requestAnimationFrame(loop)
   }
 
+  /**
+   * Stops rendering the cube and removes all listeners.
+   */
   stop() {
     window.removeEventListener('resize', this.#resizeHandler)
     cancelAnimationFrame(this.#frame)
     this.#inputHandler.removeEventListeners()
   }
 
+  /**
+   * Resets the internal state and applys it to the cube.
+   */
   reset() {
     this.#state.reset()
     this.#state.applyState(this.#uvs, this.#rubiks)
   }
 
   /**
-   * @param {string} stateStr
-   * @returns {boolean}
+   * @param {string} stateStr a base46 representation
+   * @returns {boolean} false if `stateStr` was invalid
    */
   setState(stateStr) {
     if (!this.#initialized) {
