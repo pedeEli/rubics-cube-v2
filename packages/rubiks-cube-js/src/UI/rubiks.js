@@ -82,7 +82,7 @@ const shouldInvertAngle = (axis, side) => {
 /**
  * @extends {Transform<Cubie, null>}
  */
-export class RubicsTransform extends Transform {
+export class RubiksTransform extends Transform {
   /** @type {[V3, V3, V3]} */
   rotationAxis
 
@@ -108,8 +108,8 @@ export class RubicsTransform extends Transform {
 
 /** @typedef {(event: import('../types').Events['turn']) => void} TurnCallback */
 
-export class Rubics {
-  /** @type {RubicsTransform} */
+export class Rubiks {
+  /** @type {RubiksTransform} */
   transform
   /** @type {Cubie[]} */
   cubies
@@ -124,7 +124,7 @@ export class Rubics {
    */
   constructor(rotation, uvs, hoveringColors, turnCallback) {
     this.#turnCallback = turnCallback
-    this.transform = new RubicsTransform(V3.zero, rotation)
+    this.transform = new RubiksTransform(V3.zero, rotation)
 
     this.cubies = []
 
@@ -161,7 +161,7 @@ export class Rubics {
    * @returns {Cubie[]}
    */
   getPlane(axis, index) {
-    const [d1, d2] = Rubics.#axisDeltasMap[axis]
+    const [d1, d2] = Rubiks.#axisDeltasMap[axis]
     const initial = Math.pow(3, axis) * index
 
     /** @type {Cubie[]} */

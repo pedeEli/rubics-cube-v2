@@ -22,7 +22,7 @@ canvas {
   touch-action: none;
 }
 
-canvas[data-rubics-cube-debug] {
+canvas[data-rubiks-cube-debug] {
   pointer-events: none;
 }
 

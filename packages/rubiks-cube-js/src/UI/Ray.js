@@ -23,9 +23,9 @@ export class Ray {
     this.#direction = d2.toV3().normalized
   }
 
-  /** @param {import('./Rubics').Rubics} rubics */
-  intersectRubics(rubics) {
-    return rubics.cubies.map(cubie => this.#intersectCube(cubie)).flat(1)
+  /** @param {import('./rubiks').Rubiks} rubiks */
+  intersectRubiks(rubiks) {
+    return rubiks.cubies.map(cubie => this.#intersectCube(cubie)).flat(1)
   }
 
   /** @param {import('./cubie').Cubie} cubie */

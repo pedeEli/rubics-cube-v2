@@ -4,7 +4,7 @@ export default {
 		{
 			name: 'watch-rubiks-cube-js',
 			configureServer(vite) {
-				vite.watcher.add('../rubics-cube-js')
+				vite.watcher.add('../rubiks-cube-js')
 			}
 		}
 	]

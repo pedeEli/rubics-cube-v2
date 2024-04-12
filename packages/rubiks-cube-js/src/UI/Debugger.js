@@ -18,13 +18,13 @@ class Debugger {
     }
 
     if (!(canvas instanceof HTMLCanvasElement)) {
-      throw new Error(`rubics cube debugger is not a canvas, it is a <${canvas.tagName}>`)
+      throw new Error(`rubiks cube debugger is not a canvas, it is a <${canvas.tagName}>`)
     }
     this.#canvas = canvas
 
     const ctx = canvas.getContext('2d')
     if (!ctx)
-      throw new Error('cannot create 2d context for rubics cube debugger')
+      throw new Error('cannot create 2d context for rubiks cube debugger')
     this.#ctx = ctx
   }
 
@@ -102,4 +102,4 @@ class Debugger {
 }
 
 
-export default new Debugger(document.querySelector('[data-rubics-cube-debug]'))
+export default new Debugger(document.querySelector('[data-rubiks-cube-debug]'))

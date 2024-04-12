@@ -71,14 +71,14 @@ export const positionToUvs = (pos, side, uvs) => {
 export class Cubie {
   /** @type {Facelet[]} */
   facelets = []
-  /** @type {Transform<Facelet | InsideFacelet, import('./Rubics').Rubics>} */
+  /** @type {Transform<Facelet | InsideFacelet, import('./rubiks').Rubiks>} */
   transform
 
   /**
    * @param {number} index
    * @param {number[][][]} uvs
    * @param {V3[]} hoveringColors
-   * @param {import('./Rubics').Rubics} parent
+   * @param {import('./rubiks').Rubiks} parent
    */
   constructor(index, uvs, hoveringColors, parent) {
     this.index = index

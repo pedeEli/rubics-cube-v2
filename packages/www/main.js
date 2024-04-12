@@ -1,6 +1,6 @@
 import './style.css'
 
-import {RubicsCube, defaultHovorvingColors, defaultTexture, defaultUVs} from 'rubiks-cube-js'
+import {RubiksCube, defaultHovorvingColors, defaultTexture, defaultUVs} from 'rubiks-cube-js'
 
 
 const image = new Image()
@@ -24,8 +24,8 @@ const uvs = Array(6).fill(null).map((_, side) => {
 })
 
 image.addEventListener('load', () => {
-  const rubicsCube = new RubicsCube(
-    'data-rubics-cube',
+  const rubiksCube = new RubiksCube(
+    'data-rubiks-cube',
     image,
     uvs,
     defaultHovorvingColors,
@@ -34,16 +34,16 @@ image.addEventListener('load', () => {
   
   const state = new URL(location.toString()).searchParams.get('state')
   if (state != null) {
-    rubicsCube.setState(state)
+    rubiksCube.setState(state)
   }
 
-  rubicsCube.on('state', state => {
+  rubiksCube.on('state', state => {
     const url = new URL(location.toString())
     url.searchParams.set('state', state)
     history.replaceState(null, '', url)
   })
 
-  rubicsCube.start()
+  rubiksCube.start()
 })
 
 document.querySelector('[data-reset-state]')?.addEventListener('click', () => {

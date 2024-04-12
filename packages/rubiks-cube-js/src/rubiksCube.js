@@ -3,7 +3,7 @@ import {Quaternion} from './math/quarternion'
 
 import {Program} from './ui/program'
 import {Camera} from './ui/camera'
-import {Rubics} from './ui/rubics'
+import {Rubiks} from './ui/rubiks'
 import {InputHandler} from './ui/inputHandler'
 import debug from './ui/debugger'
 
@@ -16,7 +16,7 @@ import {convertEventToTurn} from './converter'
 
 /** @typedef {import('./types').Events} Events */
 
-export class RubicsCube {
+export class RubiksCube {
   #initialized = false
   
 	/** @type {WebGL2RenderingContext} */
@@ -34,8 +34,8 @@ export class RubicsCube {
 
 	/** @type {Camera} */
   #camera
-	/** @type {Rubics} */
-  #rubics
+	/** @type {Rubiks} */
+  #rubiks
 	/** @type {InputHandler} */
   #inputHandler
   /** @type {State} */
@@ -44,7 +44,7 @@ export class RubicsCube {
   #trackCenters
 
   #frame = 0
-  #resizeHandler = RubicsCube.#getResizeHandler(this)
+  #resizeHandler = RubiksCube.#getResizeHandler(this)
 
 	/** @type {string} */
 	#canvasData
@@ -101,8 +101,8 @@ export class RubicsCube {
       this.#program.uniform('view', this.#camera.worldToCameraMatrix)
       this.#program.uniform('projection', this.#camera.projectionMatrix)
     
-      this.#rubics.render(this.#program, this.#gl, this.#uvsVbo)
-      this.#rubics.update(deltaTime)
+      this.#rubiks.render(this.#program, this.#gl, this.#uvsVbo)
+      this.#rubiks.update(deltaTime)
     
       this.#frame = requestAnimationFrame(loop)
     }
@@ -129,26 +129,26 @@ export class RubicsCube {
       return false
     }
 
-    this.#state.applyState(this.#uvs, this.#rubics)
+    this.#state.applyState(this.#uvs, this.#rubiks)
     return true
   }
 
 	/**
-	 * @param {RubicsCube} rubicsCube
+	 * @param {RubiksCube} rubiksCube
 		* @returns {() => void}
 	 */
-  static #getResizeHandler(rubicsCube) {
+  static #getResizeHandler(rubiksCube) {
     return () => {
       const width = window.innerWidth
       const height = window.innerHeight
     
       debug.setSize(width, height)
     
-      rubicsCube.#canvas.width = width
-      rubicsCube.#canvas.height = height
-      rubicsCube.#gl.viewport(0, 0, width, height)
+      rubiksCube.#canvas.width = width
+      rubiksCube.#canvas.height = height
+      rubiksCube.#gl.viewport(0, 0, width, height)
     
-      rubicsCube.#camera.screenSize(width, height)
+      rubiksCube.#camera.screenSize(width, height)
     }
   }
 
@@ -171,7 +171,7 @@ export class RubicsCube {
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LESS)
     
-    this.#program = new Program('RubicsCube/Shaders/facelet.glsl', vertex, fragment, gl)
+    this.#program = new Program('rubiksCube/shaders/facelet.glsl', vertex, fragment, gl)
 
     const vao = gl.createVertexArray()
     if (!vao) {
@@ -237,13 +237,13 @@ export class RubicsCube {
 
     const hoveringColors = this.#hoveringColors.map(([r, g, b]) => new V3(r, g, b))
     this.#camera = new Camera(new V3(0, 0, -10), V3.zero, V3.up, 45, window.innerWidth, window.innerHeight, .1, 100)
-    this.#rubics = new Rubics(Quaternion.identity, this.#uvs, hoveringColors, this.#turnHandler.bind(this))
-    this.#inputHandler = new InputHandler(canvas, this.#rubics, this.#camera)
+    this.#rubiks = new Rubiks(Quaternion.identity, this.#uvs, hoveringColors, this.#turnHandler.bind(this))
+    this.#inputHandler = new InputHandler(canvas, this.#rubiks, this.#camera)
     this.#state = new State(this.#trackCenters)
   }
 
   get transform() {
-    return this.#rubics.transform
+    return this.#rubiks.transform
   }
 
 	/** @type {Map<keyof Events, Set<(event: any) => void>>} */

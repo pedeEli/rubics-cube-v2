@@ -403,9 +403,9 @@ export class Corners {
 
   /**
    * @param {number[][][]} uvs
-   * @param {import('../ui/Rubics').Rubics} rubics
+   * @param {import('../ui/rubiks').Rubiks} rubiks
    */
-  applyState(uvs, rubics) {
+  applyState(uvs, rubiks) {
     for (let i = 0; i < 8; i++) {
       const turns = this.#getTurns(i)
 
@@ -414,7 +414,7 @@ export class Corners {
       sideToUvs = transformSidetoUvs(originIndex, sideToUvs, turns)
 
       const targetIndex = orderIndexToCubieIndex[i]
-      setUvs(targetIndex, rubics, sideToUvs)
+      setUvs(targetIndex, rubiks, sideToUvs)
     }
   }
 

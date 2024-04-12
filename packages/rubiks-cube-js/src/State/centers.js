@@ -29,14 +29,14 @@ export class Centers {
 
 	/**
 	 * @param {number[][][]} uvs
-	 * @param {import('../ui/Rubics').Rubics} rubics
+	 * @param {import('../ui/rubiks').Rubiks} rubiks
 	 */
-	applyState(uvs, rubics) {
+	applyState(uvs, rubiks) {
 		for (let side = 0; side < 6; side++) {
 			const uv = uvs[side][4]
 			const offset = this.orientation[side] * 2
 			const cubieIndex = orderIndexToCubieIndex[side]
-			const facelet = rubics.cubies[cubieIndex].getFaceletOfSide(side)
+			const facelet = rubiks.cubies[cubieIndex].getFaceletOfSide(side)
 			facelet.uvs = []
 			for (let i = 0; i < 8; i++) {
 				facelet.uvs[i] = uv[mod(offset + i, 8)]

@@ -38,13 +38,13 @@ export class State {
 
   /**
    * @param {number[][][]} uvs
-   * @param {import('../ui/Rubics').Rubics} rubics
+   * @param {import('../ui/rubiks').Rubiks} rubiks
    */
-  applyState(uvs, rubics) {
-    this.#corners.applyState(uvs, rubics)
-    this.#edges.applyState(uvs, rubics)
+  applyState(uvs, rubiks) {
+    this.#corners.applyState(uvs, rubiks)
+    this.#edges.applyState(uvs, rubiks)
     if (this.#trackCenters) {
-      this.#centers.applyState(uvs, rubics)
+      this.#centers.applyState(uvs, rubiks)
     }
   }
 
@@ -170,11 +170,11 @@ export const transformSidetoUvs = (originIndex, sideToUvs, turns) => {
 
 /**
  * @param {number} targetIndex
- * @param {import('../ui/Rubics').Rubics} rubics
+ * @param {import('../ui/rubiks').Rubiks} rubiks
  * @param {Record<number, number[]>} sideToUvs
  */
-export const setUvs = (targetIndex, rubics, sideToUvs) => {
-  const cubie = rubics.cubies[targetIndex]
+export const setUvs = (targetIndex, rubiks, sideToUvs) => {
+  const cubie = rubiks.cubies[targetIndex]
   for (const facelet of cubie.facelets) {
     facelet.uvs = sideToUvs[facelet.side]
   }

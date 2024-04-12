@@ -8,8 +8,8 @@ import {clamp} from '../math/utils'
 export class InputHandler {
   /** @type {HTMLCanvasElement} */
   #canvas
-  /** @type {import('./Rubics').Rubics} */
-  #rubics
+  /** @type {import('./rubiks').Rubiks} */
+  #rubiks
   /** @type {import('./camera').Camera} */
   #camera
   /** @readonly */
@@ -19,12 +19,12 @@ export class InputHandler {
 
   /**
    * @param {HTMLCanvasElement} canvas
-   * @param {import('./Rubics').Rubics} rubics
+   * @param {import('./rubiks').Rubiks} rubiks
    * @param {import('./camera').Camera} camera
    */
-  constructor(canvas, rubics, camera) {
+  constructor(canvas, rubiks, camera) {
     this.#canvas = canvas
-    this.#rubics = rubics
+    this.#rubiks = rubiks
     this.#camera = camera
   }
 
@@ -61,7 +61,7 @@ export class InputHandler {
     if (this.#action.type === 'rotatingSide' && this.#action.side) {
       const info = this.#action[this.#action.side]
       const angle = Math.round(info.angle / 90)
-      this.#rubics.finishRotation(info.axis, info.index, angle, this.#action.facelet.side)
+      this.#rubiks.finishRotation(info.axis, info.index, angle, this.#action.facelet.side)
     }
     this.#action = action
   }
@@ -84,7 +84,7 @@ export class InputHandler {
       }
   
       if (inputHandler.#pointers.size === 1) {
-        if (inputHandler.#rubics.isTurning) {
+        if (inputHandler.#rubiks.isTurning) {
           return
         }
         if (inputHandler.#action.type === 'none') {
@@ -165,7 +165,7 @@ export class InputHandler {
     const rightDir = screenTopRight.sub(screenTopLeft).normalized
     const downDir = screenBottomLeft.sub(screenTopLeft).normalized
 
-    const rubicsRotation = this.#rubics.transform
+    const rubiksRotation = this.#rubiks.transform
 
     const side = hovering.side
     const currentAxis = Math.floor(side / 2)
@@ -174,12 +174,12 @@ export class InputHandler {
       .filter(axis => axis !== currentAxis)
       .map(axis => {
         const rotationAxis = V3.getRotationAxis(axis)
-        const rubicsRotationAxis = rubicsRotation.apply(rotationAxis)
+        const rubiksRotationAxis = rubiksRotation.apply(rotationAxis)
         const index = Math.floor(cubie.index / Math.pow(3, axis)) % 3
         /** @type {import('../types').AxisInfo} */ 
         const info = {
-          default: rubicsRotationAxis,
-          inverted: rubicsRotationAxis.negate,
+          default: rubiksRotationAxis,
+          inverted: rubiksRotationAxis.negate,
           axis,
           index
         }
@@ -240,11 +240,11 @@ export class InputHandler {
     const downDot = down.dir.dot(mouseDir)
     if (Math.abs(rightDot) > Math.abs(downDot)) {
       this.#action.side = 'right'
-      this.#rubics.startRotation(right.cubies, right.rotationAxis)
+      this.#rubiks.startRotation(right.cubies, right.rotationAxis)
       this.#rotateSide(mouse, right, initialMouse)
     } else {
       this.#action.side = 'down'
-      this.#rubics.startRotation(down.cubies, down.rotationAxis)
+      this.#rubiks.startRotation(down.cubies, down.rotationAxis)
       this.#rotateSide(mouse, down, initialMouse)
     }
   }
@@ -311,7 +311,7 @@ export class InputHandler {
    */
   #actionHovering(offsetX, offsetY) {
     const ray = new Ray(this.#camera, offsetX, offsetY, window.innerWidth, window.innerHeight)
-    const facelets = ray.intersectRubics(this.#rubics)
+    const facelets = ray.intersectRubiks(this.#rubiks)
     if (facelets.length) {
       facelets.sort((a, b) => a.d - b.d)
       this.#setAction({
@@ -342,7 +342,7 @@ export class InputHandler {
         axis: axisInfo.axis,
         rotationAxis: V3.getRotationAxis(axisInfo.axis).scale(invert ? -1 : 1),
         index: axisInfo.index,
-        cubies: this.#rubics.getPlane(axisInfo.axis, axisInfo.index)
+        cubies: this.#rubiks.getPlane(axisInfo.axis, axisInfo.index)
       }
 
     return {
@@ -351,7 +351,7 @@ export class InputHandler {
       axis: axisInfo.axis,
       rotationAxis: V3.getRotationAxis(axisInfo.axis).scale(invert ? 1 : -1),
       index: axisInfo.index,
-      cubies: this.#rubics.getPlane(axisInfo.axis, axisInfo.index)
+      cubies: this.#rubiks.getPlane(axisInfo.axis, axisInfo.index)
     }
   }
   /**
@@ -363,7 +363,7 @@ export class InputHandler {
     const length = info.dir.dot(initialMouse.sub(mouse))
     const zoom = this.#getZoom()
     info.angle = length / (3 - zoom * 2)
-    this.#rubics.rotateManual(info.angle)
+    this.#rubiks.rotateManual(info.angle)
   }
   // rotating cube
   /** @param {V2} delta */
@@ -376,7 +376,7 @@ export class InputHandler {
     const axis = this.#camera.forward.cross(n)
     const zoom = this.#getZoom()
     const angle = Math.sqrt(delta.x * delta.x + delta.y * delta.y) * .3 + 2 * zoom
-    this.#rubics.transform.rotate(axis, angle)
+    this.#rubiks.transform.rotate(axis, angle)
   }
   // zooming camera
   /** @param {number} d */

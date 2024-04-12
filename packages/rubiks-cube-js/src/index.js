@@ -1,4 +1,4 @@
-export {RubicsCube} from './rubicsCube'
+export {RubiksCube} from './rubiksCube'
 
 export const defaultTexture = new ImageData(new Uint8ClampedArray([
   0,   0, 255, 255,
