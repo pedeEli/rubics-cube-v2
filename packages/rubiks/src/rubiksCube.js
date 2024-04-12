@@ -13,6 +13,8 @@ import {State} from './state'
 
 import {convertAiaToTurn} from './converter'
 
+import {ChangeEvent} from './events'
+
 
 /** @typedef {import('./types').Events} Events */
 
@@ -283,12 +285,15 @@ export class RubiksCube {
     /** @type {Set<(event: Events['change']) => void> | undefined} */
     const changeHandlers = this.#listeners.get('change')
     if (changeHandlers) {
+      const event = new ChangeEvent(
+        aia.axis,
+        aia.index,
+        aia.angle,
+        turn,
+        this.#state.stateInfo
+      )
       for (const callback of changeHandlers) {
-        callback({
-          ...aia,
-          turn,
-          state: this.#state.stateInfo
-        })
+        callback(event)
       }
     }
   }

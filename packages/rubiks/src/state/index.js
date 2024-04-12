@@ -128,7 +128,9 @@ export class StateInfo {
     this.#state = state
   }
 
-  /** @returns {string} */
+  /**
+   * @returns {string} base64 encoded, can be used in the setState method
+   */
   toString() {
     return this.#state.encode()
   }

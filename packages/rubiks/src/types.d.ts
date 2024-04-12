@@ -55,8 +55,5 @@ export type AIA = {
 }
 
 export type Events = {
-  change: AIA & {
-    turn: Turn,
-    state: StateInfo
-  }
+  change: import('./events').ChangeEvent
 }
