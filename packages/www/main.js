@@ -32,9 +32,12 @@ image.addEventListener('load', () => {
     true
   )
   
-  const state = new URL(location.toString()).searchParams.get('state')
-  if (state != null) {
-    rubiksCube.setState(state)
+  const url = new URL(location.toString())
+  const state = url.searchParams.get('state')
+  if (state != null && !rubiksCube.setState(state)) {
+    rubiksCube.reset()
+    url.searchParams.delete('state')
+    history.replaceState(null, '', url)
   }
 
   rubiksCube.on('change', event => {

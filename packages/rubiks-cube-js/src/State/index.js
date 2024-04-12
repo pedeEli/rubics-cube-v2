@@ -111,6 +111,12 @@ export class State {
 
     return true
   }
+
+  reset() {
+    this.#corners.reset()
+    this.#edges.reset()
+    this.#centers.reset()
+  }
 }
 
 export class StateInfo {

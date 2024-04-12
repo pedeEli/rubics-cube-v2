@@ -681,6 +681,11 @@ export class Edges {
     }
   }
 
+  reset() {
+    this.permutation = [...Edges.order]
+    this.orientation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
+
   /** @returns {number[]} */
   encode() {
     /** @type {number[]} */

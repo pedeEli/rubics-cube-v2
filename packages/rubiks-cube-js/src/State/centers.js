@@ -44,6 +44,10 @@ export class Centers {
 		}
 	}
 
+	reset() {
+		this.orientation = [0, 0, 0, 0, 0, 0]
+	}
+
 	/** @returns {number[]} */
 	encode() {
 		let o = 0

@@ -115,6 +115,11 @@ export class RubiksCube {
     this.#inputHandler.removeEventListeners()
   }
 
+  reset() {
+    this.#state.reset()
+    this.#state.applyState(this.#uvs, this.#rubiks)
+  }
+
   /**
    * @param {string} stateStr
    * @returns {boolean}

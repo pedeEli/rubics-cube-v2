@@ -418,6 +418,11 @@ export class Corners {
     }
   }
 
+  reset() {
+    this.permutation = [...Corners.order]
+    this.orientation = [0, 0, 0, 0, 0, 0, 0, 0]
+  }
+
   /** @returns {number[]} */
   encode() {
     let p = 0
