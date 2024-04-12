@@ -2,7 +2,7 @@
 	"name": "root",
 	"scripts": {
 		"dev": "pnpm --filter www dev",
-		"build": "pnpm --filter www build",
+		"build": "pnpm check && pnpm --filter www build",
 		"check": "pnpm --filter rubiks-cube-js check"
 	}
 }
