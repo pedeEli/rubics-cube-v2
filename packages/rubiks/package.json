@@ -27,9 +27,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pedeEli/rubiks"
+    "url": "git+https://github.com/pedeEli/rubiks.git"
   },
-
   "main": "./src/index.js",
   "scripts": {
     "check": "tsc",
