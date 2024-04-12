@@ -12,7 +12,10 @@
     "state",
     "jsdoc",
     "image",
-    "picture"
+    "picture",
+    "touch",
+    "mobile",
+    "phone"
   ],
   "homepage": "https://github.com/pedeEli/rubiks/blob/main/packages/rubiks/README.md",
   "bugs": {

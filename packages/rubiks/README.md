@@ -1,27 +1,28 @@
 # Rubiks Cube for the web
 
-This library can be used to embed a rubiks cube into any website. Supports mouse and touch, is pure js and does not use any libraries.
+This library can be used to embed a rubiks cube into any website. Supports mouse and touch, is pure js typed with jsdoc and does not use any libraries.
 
 ## Usage
 
 First install
 ```
-npm install rubiks-cube
+npm install rubiks
 ```
 
 then create a rubiks cube and start it
-```typescript
-import {RubiksCube, defaultTexture, defaultUVs, defaultHoveringColors} from 'rubiks-cube-js'
+```javascript
+import {RubiksCube, defaultTexture, defaultUVs, defaultHoveringColors} from 'rubiks'
 
 const rubiksCube = new RubiksCube(
   attributeName,
   defaultTexture,
   defaultUVs,
-  defaultHoveringColors
+  defaultHoveringColors,
+  trackCenters
 )
 rubiksCube.start()
 ```
-webgl is automaticly instanciated when first calling ```start()```.
+webgl is automaticly instanciated when first calling `start()`.
 
 ### `attributeName`
 Specifies the data attribute on the canvas
@@ -38,6 +39,36 @@ Specifies which sticker (facelet) uses which part of the [texture](#texture) and
 
 ### `hoveringColors`
 Specifies a red, green and blue channel by which the colors of a side is multiplied when hovering over it.
+
+### `trackCenters`
+This is only usefull when using images. It is a boolean and if set to `true` the rotation
+of all 6 centers is included in the [state](#state).
+
+
+## State
+This library has a simple way of tracking the current state of the cube.
+Below is an example of how to store the state inside the url.
+
+### `rubiks.on()`
+```javascript
+const url = new URL(location.toString())
+const state = url.searchParams.get('state')
+if (state != null) {
+  rubiksCube.setState(state)
+}
+
+rubiksCube.on('change', event => {
+  const url = new URL(location.toString())
+  url.searchParams.set('state', event.state.toString())
+  history.replaceState(null, '', url)
+})
+rubiksCube.start()
+```
+`rubiksCube.setState` returns `true` if the state was parsed correctly and `false`
+if there was an error.
+
+### `rubiks.reset()`
+Resets the state of the cube.
 
 
 ## Indices
@@ -59,7 +90,7 @@ Indices have the following order: (brackets use default values)
 This is a bit more complicated to explain. The indices follow the same [rule](#indices) as the [sides](#side). For example if you look at the front side without moving the cube index 0 would be the bottom right facelet and index 1 would be 1 to the left. Thats because the indices go first from left to right and the from bottom to top. This means index 0, 1 and 2 are the bottom row, 3, 4 and 5 the row above and so on. And remember always from left to right. In this example we were able to ignore the third [index rule](#indices) because these facelets where pointed at the front so it doesn't make sense to use this rule. Following the same logic we can always ignore on rule when figuring the facelet indices out.
 
 If you want a visual way to see all indices use the following code and copy the [numbers.png](https://github.com/pedeEli/rubiks-cube-v2/blob/main/number.png) image to your source files
-```typescript
+```javascript
 import {RubiksCube, defaultHovorvingColors} from './RubiksCube'
 
 const image = new Image()
@@ -88,7 +119,8 @@ image.addEventListener('load', () => {
     'data-rubiks-cube',
     image,
     uvs,
-    defaultHovorvingColors
+    defaultHovorvingColors,
+    true
   )
 
   rubiksCube.start()
