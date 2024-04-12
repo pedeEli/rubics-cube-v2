@@ -1,4 +1,4 @@
-import {V4, V3} from './Vector'
+import {V4, V3} from './vector'
 
 
 /**

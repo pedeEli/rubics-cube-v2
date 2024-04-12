@@ -1,7 +1,7 @@
 /**
  * @typedef {import('./types').Events['turn']} TurnEvent
- * @typedef {import('./State/types').TurnBase} TurnBase
- * @typedef {import('./State/types').Turn} Turn
+ * @typedef {import('./state/types').TurnBase} TurnBase
+ * @typedef {import('./state/types').Turn} Turn
  */
 
 /** @type {[a: TurnBase, b: TurnBase, invert: boolean][]} */

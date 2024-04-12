@@ -1,4 +1,4 @@
-import {V3, V4} from '../Math/Vector'
+import {V3, V4} from '../math/vector'
 
 export class Ray {
   /** @type {V3} */
@@ -7,7 +7,7 @@ export class Ray {
   #direction
 
   /**
-   * @param {import('./Camera').Camera} camera
+   * @param {import('./camera').Camera} camera
    * @param {number} x
    * @param {number} y
    * @param {number} width
@@ -28,11 +28,11 @@ export class Ray {
     return rubics.cubies.map(cubie => this.#intersectCube(cubie)).flat(1)
   }
 
-  /** @param {import('./Cubie').Cubie} cubie */
+  /** @param {import('./cubie').Cubie} cubie */
   #intersectCube(cubie) {
     return cubie.facelets.reduce((
-      /** @type {{facelet: import('./Facelet').Facelet, d: number}[]} */ acc,
-      /** @type {import('./Facelet').Facelet} */ facelet
+      /** @type {{facelet: import('./facelet').Facelet, d: number}[]} */ acc,
+      /** @type {import('./facelet').Facelet} */ facelet
     ) => {
       const hit = this.intersectFacelet(facelet)
       if (hit.inside) {
@@ -43,12 +43,12 @@ export class Ray {
   }
 
   /**
-   * @param {import('./Facelet').Facelet} facelet
+   * @param {import('./facelet').Facelet} facelet
    * @returns {{
    *  inside: false
    * } | {
    *  inside: true,
-   *  facelet: import('./Facelet').Facelet,
+   *  facelet: import('./facelet').Facelet,
    *  d: number
    * }}
    */

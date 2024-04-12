@@ -1,4 +1,4 @@
-import {Vector} from './AbstractVector'
+import {Vector} from './abstractVector'
 
 /**
  * @typedef {import('../types').Uniform} Uniform

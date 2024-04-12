@@ -1,9 +1,9 @@
-import {V3, V4} from '../Math/Vector'
-import {Quaternion} from '../Math/Quarternion'
+import {V3, V4} from '../math/vector'
+import {Quaternion} from '../math/quarternion'
 
-import {Program} from './Program'
-import {Transform} from './Transform'
-import {Cubie} from './Cubie'
+import {Program} from './program'
+import {Transform} from './transform'
+import {Cubie} from './cubie'
 
 /**
  * @extends {Transform<any, Cubie>}

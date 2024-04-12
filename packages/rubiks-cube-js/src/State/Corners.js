@@ -403,7 +403,7 @@ export class Corners {
 
   /**
    * @param {number[][][]} uvs
-   * @param {import('../UI/Rubics').Rubics} rubics
+   * @param {import('../ui/Rubics').Rubics} rubics
    */
   applyState(uvs, rubics) {
     for (let i = 0; i < 8; i++) {

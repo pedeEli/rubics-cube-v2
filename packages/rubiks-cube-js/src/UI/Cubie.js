@@ -1,8 +1,8 @@
-import {V3} from '../Math/Vector'
-import {Quaternion} from '../Math/Quarternion'
+import {V3} from '../math/vector'
+import {Quaternion} from '../math/quarternion'
 
-import {Facelet, FaceletTransform, InsideFacelet} from './Facelet'
-import {Transform} from './Transform'
+import {Facelet, FaceletTransform, InsideFacelet} from './facelet'
+import {Transform} from './transform'
 
 
 const positionForSide = [
@@ -115,7 +115,7 @@ export class Cubie {
   }
 
   /**
-   * @param {import('./Program').Program} program
+   * @param {import('./program').Program} program
    * @param {WebGL2RenderingContext} gl
    * @param {WebGLBuffer} uvsVbo
    */

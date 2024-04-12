@@ -1,4 +1,4 @@
-import {mod} from '../Math/Utils'
+import {mod} from '../math/utils'
 
 /**
  * @typedef {import('./types').TurnBase} TurnBase
@@ -29,7 +29,7 @@ export class Centers {
 
 	/**
 	 * @param {number[][][]} uvs
-	 * @param {import('../UI/Rubics').Rubics} rubics
+	 * @param {import('../ui/Rubics').Rubics} rubics
 	 */
 	applyState(uvs, rubics) {
 		for (let side = 0; side < 6; side++) {

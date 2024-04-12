@@ -1,7 +1,7 @@
-import type {Facelet} from './UI/Facelet'
-import type {Cubie} from './UI/Cubie'
+import type {Facelet} from './ui/facelet'
+import type {Cubie} from './ui/cubie'
 
-import type {V2, V3} from './Math/Vector'
+import type {V2, V3} from './math/vector'
 
 export type AxisInfo = {
   default: V3

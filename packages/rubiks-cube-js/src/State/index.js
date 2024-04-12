@@ -1,10 +1,10 @@
-import {Corners} from './Corners'
-import {Edges} from './Edges'
-import {Centers} from './Center'
-import {convertTurnToTurnBase, convertTurnToEvent} from '../Converter'
-import {uvsTransformerPresets, cubiesShiftMapper, sidesShiftMapper} from '../UI/UVs'
-import {isInside, indexToPosition, positionToUvs} from '../UI/Cubie'
-import {mod} from '../Math/Utils'
+import {Corners} from './corners'
+import {Edges} from './edges'
+import {Centers} from './centers'
+import {convertTurnToTurnBase, convertTurnToEvent} from '../converter'
+import {uvsTransformerPresets, cubiesShiftMapper, sidesShiftMapper} from '../ui/uvs'
+import {isInside, indexToPosition, positionToUvs} from '../ui/cubie'
+import {mod} from '../math/utils'
 
 /**
  * @typedef {import('./types').Turn} Turn
@@ -38,7 +38,7 @@ export class State {
 
   /**
    * @param {number[][][]} uvs
-   * @param {import('../UI/Rubics').Rubics} rubics
+   * @param {import('../ui/Rubics').Rubics} rubics
    */
   applyState(uvs, rubics) {
     this.#corners.applyState(uvs, rubics)
@@ -170,7 +170,7 @@ export const transformSidetoUvs = (originIndex, sideToUvs, turns) => {
 
 /**
  * @param {number} targetIndex
- * @param {import('../UI/Rubics').Rubics} rubics
+ * @param {import('../ui/Rubics').Rubics} rubics
  * @param {Record<number, number[]>} sideToUvs
  */
 export const setUvs = (targetIndex, rubics, sideToUvs) => {

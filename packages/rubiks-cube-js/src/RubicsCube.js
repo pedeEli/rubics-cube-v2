@@ -1,17 +1,17 @@
-import {V3} from './Math/Vector'
-import {Quaternion} from './Math/Quarternion'
+import {V3} from './math/vector'
+import {Quaternion} from './math/quarternion'
 
-import {Program} from './UI/Program'
-import {Camera} from './UI/Camera'
-import {Rubics} from './UI/Rubics'
-import {InputHandler} from './UI/InputHandler'
-import debug from './UI/Debugger'
+import {Program} from './ui/program'
+import {Camera} from './ui/camera'
+import {Rubics} from './ui/rubics'
+import {InputHandler} from './ui/inputHandler'
+import debug from './ui/debugger'
 
-import {vertex, fragment} from './Shaders/facelet.glsl'
+import {vertex, fragment} from './shaders/facelet.glsl'
 
-import {State} from './State'
+import {State} from './state'
 
-import {convertEventToTurn} from './Converter'
+import {convertEventToTurn} from './converter'
 
 
 /** @typedef {import('./types').Events} Events */

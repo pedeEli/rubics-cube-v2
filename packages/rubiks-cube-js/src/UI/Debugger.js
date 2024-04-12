@@ -1,4 +1,4 @@
-import {V2} from '../Math/Vector'
+import {V2} from '../math/vector'
 
 class Debugger {
   /** @type {CanvasRenderingContext2D?} */

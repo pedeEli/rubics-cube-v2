@@ -1,6 +1,6 @@
 import './style.css'
 
-import {RubicsCube, defaultHovorvingColors, defaultTexture, defaultUVs, State} from 'rubiks-cube-js'
+import {RubicsCube, defaultHovorvingColors, defaultTexture, defaultUVs} from 'rubiks-cube-js'
 
 
 const image = new Image()

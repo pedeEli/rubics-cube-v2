@@ -1,10 +1,10 @@
-import {Quaternion} from '../Math/Quarternion'
-import {V4} from '../Math/Vector'
+import {Quaternion} from '../math/quarternion'
+import {V4} from '../math/vector'
 
 /**
  * @typedef {{transform: Transform<any, any>}} WithTransform
- * @typedef {import('../Math/Matrix').M44} M44
- * @typedef {import('../Math/Vector').V3} V3
+ * @typedef {import('../math/matrix').M44} M44
+ * @typedef {import('../math/Vector').V3} V3
  */
 
 /**

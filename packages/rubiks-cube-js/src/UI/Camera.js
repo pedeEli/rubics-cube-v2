@@ -1,5 +1,5 @@
-import {V2, V3, V4} from '../Math/Vector'
-import {M44} from '../Math/Matrix'
+import {V2, V3, V4} from '../math/vector'
+import {M44} from '../math/matrix'
 
 export class Camera {
   /** @type {V3} */

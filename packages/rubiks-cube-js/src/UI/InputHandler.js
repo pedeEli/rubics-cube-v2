@@ -1,8 +1,8 @@
-import {Ray} from './Ray'
-// import debug from './Debugger'
+import {Ray} from './ray'
+// import debug from './debugger'
 
-import {V2, V3} from '../Math/Vector'
-import {clamp} from '../Math/Utils'
+import {V2, V3} from '../math/vector'
+import {clamp} from '../math/utils'
 
 
 export class InputHandler {
@@ -10,7 +10,7 @@ export class InputHandler {
   #canvas
   /** @type {import('./Rubics').Rubics} */
   #rubics
-  /** @type {import('./Camera').Camera} */
+  /** @type {import('./camera').Camera} */
   #camera
   /** @readonly */
   #maxZoom = 40
@@ -20,7 +20,7 @@ export class InputHandler {
   /**
    * @param {HTMLCanvasElement} canvas
    * @param {import('./Rubics').Rubics} rubics
-   * @param {import('./Camera').Camera} camera
+   * @param {import('./camera').Camera} camera
    */
   constructor(canvas, rubics, camera) {
     this.#canvas = canvas
@@ -154,7 +154,7 @@ export class InputHandler {
   /**
    * @param {number} offsetX
    * @param {number} offsetY
-   * @param {import('./Facelet').Facelet} hovering
+   * @param {import('./facelet').Facelet} hovering
    */
   #startActionRotatingSide(offsetX, offsetY, hovering) {
     const {left, top, topLeft} = hovering.transform

@@ -1,5 +1,5 @@
-import {V3, V4} from './Vector'
-import {M44} from './Matrix'
+import {V3, V4} from './vector'
+import {M44} from './matrix'
 
 export class Quaternion {
   /**

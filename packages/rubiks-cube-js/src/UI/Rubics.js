@@ -1,10 +1,10 @@
-import {V3} from '../Math/Vector'
-import {Quaternion} from '../Math/Quarternion'
-import {lerp, mod} from '../Math/Utils'
+import {V3} from '../math/vector'
+import {Quaternion} from '../math/quarternion'
+import {lerp, mod} from '../math/utils'
 
-import {Cubie} from './Cubie'
-import {Transform} from './Transform'
-import {uvsTransformerPresets, sidesShiftMapper} from './UVs'
+import {Cubie} from './cubie'
+import {Transform} from './transform'
+import {uvsTransformerPresets, sidesShiftMapper} from './uvs'
 
 // magic values
 const rotationAxis = [
@@ -141,7 +141,7 @@ export class Rubics {
   }
 
   /**
-   * @param {import('./Program').Program} program
+   * @param {import('./program').Program} program
    * @param {WebGL2RenderingContext} gl
    * @param {WebGLBuffer} uvsVbo
    */
