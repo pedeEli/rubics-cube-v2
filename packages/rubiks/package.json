@@ -1,0 +1,25 @@
+{
+  "name": "rubiks",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A rubiks cube with no dependencies. Can use custom images for faces. The state of the cube can be safed.",
+  "keywords": [
+    "rubiks",
+    "cube",
+    "rubiks cube",
+    "3x3x3",
+    "3x3",
+    "state",
+    "jsdoc",
+    "image",
+    "picture"
+  ],
+  "main": "./src/index.js",
+  "scripts": {
+    "check": "tsc",
+    "publish": "npm publish"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.3"
+  }
+}
